@@ -1,33 +1,110 @@
+@import url("https://fonts.googleapis.com/css?family=Lobster|Russo+One&display=swap");
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+body {
+  font-family: "Russo One", sans-serif;
+  background: url(https://images.unsplash.com/photo-1457725798811-c9561232a295?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80)
+    no-repeat center fixed;
+  background-size: cover;
+}
+
+.input-row {
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  color: white;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}
+
+.input-row input {
+  border-radius: 7px;
+  border-style: 18px inset #d2e3ed;
+  border-width: 2px;
+  border-color: black;
+  height: 25px;
+  opacity: 0.7;
+}
+
+.display-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 20px 30px;
+  margin-top: 100px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 2rem;
+  z-index: 1;
+  width: 100%;
+  opacity: 1;
+  margin-bottom: 1rem;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.nav-header {
+}
+
+.nav-header i {
+  margin-right: 10px;
+}
+
+.nav-background {
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 0, 0, 0),
+    rgb(89, 0, 255)
+  );
+  color: #ffff;
+}
+
+.signup-header {
   color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+.btn {
+  padding: 4px 8px;
+  color: white;
+  border-radius: 5px;
+  font-size: 20px;
+  outline: none;
+  margin: 0px 10px;
+  text-decoration: none;
 }
 
-.App-link {
-  color: #61dafb;
+.btn:hover {
+  cursor: pointer;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.normal-btn {
+  background-color: #2312b6d7;
+  border: thin;
+  border-style: solid;
+}
+
+.warning-btn {
+  background-color: red;
+}
+
+#rQuote {
+  margin-top: 50px;
+  font-family: "Lobster", cursive;
+  bottom: 0;
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
