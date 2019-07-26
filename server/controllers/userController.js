@@ -12,6 +12,9 @@ module.exports = {
       req.session.user = {
         username: existingUser.username,
         id: existingUser.id,
+        firstName: existingUser.first_name,
+        lastName: existingUser.last_name,
+        email: existingUser.email,
         loggedIn: true
       };
       res.send(req.session.user);
@@ -25,7 +28,15 @@ module.exports = {
     let salt = await bcrypt.genSalt(saltRounds);
     let hash = await bcrypt.hash(password, salt);
     let [user] = await db.create_user([firstName, lastName, email, username, hash]);
-    req.session.user = { username: user.username, id: user.id, loggedIn: true };
+    req.session.user = {
+      username: user.username,
+      id: user.id,
+      firstName: user.first_name,
+      lastName: existingUser.last_name,
+      email: existingUser.email,
+      loggedIn: true
+    };
+    console.log('req.session.user', req.session.user)
     res.send(req.session.user);
   },
   logout(req, res) {

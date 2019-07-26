@@ -24,11 +24,14 @@ class Inspire extends Component {
     render() {
         let { quotes } = this.state
         return (
-            <div>
-                <section>
-                    <h2 id='rQuote' className='listStyle header'>"{quotes.quoteText}"</h2>
-                    <dfn id='rQuote' className='listStyle2 header'>-{quotes.quoteAuthor}</dfn>
+            <div className='quote-container'>
+                <section id='random-quote'>
+                    <p>"{quotes.quoteText}"</p>
+                    <section id='quote-credit'>
+                        -{quotes.quoteAuthor}
+                    </section>
                 </section>
+
             </div>
         )
     }

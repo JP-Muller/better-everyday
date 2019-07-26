@@ -58,6 +58,7 @@ export default function (state = initialState, action) {
         case LOGOUT + '_FULFILLED':
             return { ...state, user: {}, redirect: true, error: false };
         case SIGNUP + '_FULFILLED':
+            console.log('payload', payload)
             return {
                 ...state,
                 redirect: false,

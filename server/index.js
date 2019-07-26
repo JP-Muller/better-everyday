@@ -4,6 +4,7 @@ const massive = require('massive')
 const session = require('express-session')
 const cors = require('cors')
 const uc = require('./controllers/userController')
+const lc = require('./controllers/listController')
 const qc = require('./controllers/quoteController')
 const initSession = require('./middleware/initSession');
 const authCheck = require('./middleware/authCheck');
@@ -26,13 +27,35 @@ massive(CONNECTION_STRING).then(db => {
 
 app.use(initSession)
 
+app.get('/api/entries', lc.dailyEntries)
+app.post('/api/entries', lc.addItem)
+app.put('/api/entries/:id', lc.updateItem)
+app.delete('/api/entries/:id', lc.deleteEntry)
+
+//db data eps
+app.get('/api/posts/:userId', lc.getPosts)
+app.delete('/api/posts/:postId', lc.deletePost)
+app.put('/api/posts/edit/:postId', lc.editPost)
+app.post('/api/posts', lc.savePost)
+
+
+//Authentication
 app.post('/api/login', uc.login)
-app.post('api/signup', uc.signup)
+app.post('/api/signup', uc.signup)
 app.get('/api/user', authCheck, uc.getUser)
 app.delete('/api/logout', uc.logout)
 
 // Quotes
-app.get('/api/quotes', qc.grabQuotes)
+// app.get('/api/quotes', qc.grabQuotes)
+
+//Background Image
+
+//IP Location finder
+// app.get('/api/location', lc.grabLocation)
+//Weather
+
+
+//Fun Facts
 
 
 app.listen(SERVER_PORT, () => console.log(`Listening on port ${SERVER_PORT}`))

@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import Clock from 'react-live-clock'
 // import axios from 'axios';
 
 export class DateTime extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             date: ''
         }
@@ -19,27 +20,29 @@ export class DateTime extends Component {
     }
 
     MornAfterEve = () => {
+        const { user } = this.props
+        console.log(user)
         const date = new Date()
         const currentHr = date.getHours()
         console.log(`Hour ${currentHr}:00!`)
 
         if (currentHr < 12) {
-            return 'Good Morning!'
+            return <div id='hour-greeting'><i className="far fa-sun" /> Good morning, {user.firstName}!</div>
         } else if (currentHr < 18) {
-            return 'Good Afternoon!'
+            return <div id='hour-greeting'><i className="far fa-sun" /> Good afternoon, {user.firstName}!</div>
         } else {
-            return 'Good Evening!'
+            return <div id='hour-greeting'><i class="far fa-moon" /> Good evening, {user.firstName}!</div>
         }
     }
 
     render() {
-        const { date } = this.state
         return (
-            <div id='dateDiv'>
-                <div className='header'>{this.props.test}</div>
-                <h3 id='dateHeader'>{date}</h3>
-                <div id='hourGreeting'>
-                    <h4>{this.MornAfterEve()}</h4>
+            <div id='date-div'>
+                <div id='live-clock'>
+                    <h1><Clock format={'h:mm:ss'} ticking={true} /></h1>
+                </div>
+                <div id='hour-greeting'>
+                    <h2>{this.MornAfterEve()}</h2>
                 </div>
             </div>
 

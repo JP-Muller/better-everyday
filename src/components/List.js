@@ -29,14 +29,14 @@ export default class List extends Component {
     }
 
     handleCheckChange = targetTask => {
-        console.log(targetTask)
-        let checkedTasks = this.state.accTasks
+        let { accTasks } = this.state
+        console.log('Target Task:', targetTask)
+        let checkedTasks = [...accTasks]
         checkedTasks.push(targetTask)
         this.setState({
             accTasks: checkedTasks
         })
-        console.log(this.state.checked)
-        console.log(this.state.accTasks)
+        console.log('State of checked tasks:', accTasks)
     }
 
     addToTasks = input => {
@@ -81,6 +81,8 @@ export default class List extends Component {
             initTasks: listSplicer
         })
 
+       
+
     }
 
     addEntry = () => {
@@ -102,21 +104,21 @@ export default class List extends Component {
     }
     render() {
         return (
-            <div className='listStyle'>
-                <h1 className='header'> What will you do to better yourself today?</h1>
+            <div className='list-style'>
+                <h1 className='list-header'> What's on the agenda for today?</h1>
 
-                <input onChange={(e) => this.inputChange(e.target.value)} value={this.state.inputStr} onKeyDown={this.onEnter} className='inputGoals' type='text' placeholder='Enter goal...' />
+                <input onChange={(e) => this.inputChange(e.target.value)} value={this.state.inputStr} onKeyDown={this.onEnter} className='input-goals' type='text' />
 
-                <button onClick={() => this.addToTasks(this.state.inputStr)} className='btn'>Add Task</button>
+                <button onClick={() => this.addToTasks(this.state.inputStr)} className='list-btn'>Add Task</button>
 
-                <ul id='listItem'>
+                <ul id='list-item'>
                     {this.state.initTasks.map((taskItem, i) =>
-                        <li className='taskItem' key={taskItem}><input id='checkBox' type='checkbox' onChange={this.handleCheckChange.bind(this, taskItem)} /><label htmlFor id='checkBox'>{taskItem}</label><button id='taskItemDel' onClick={this.handleTaskDelete.bind(this, taskItem)}>[X]</button></li>)}
+                        <li className='task-item' key={taskItem}><input id='check-box' type='checkbox' onChange={this.handleCheckChange.bind(this, taskItem)} /><label htmlFor id='check-box'>{taskItem}</label><button id='task-item-del' onClick={this.handleTaskDelete.bind(this, taskItem)}>[X]</button></li>)}
                     {console.log(this.state.initTasks)}
                 </ul>
 
-                <textarea id='inputThoughts' type='text' placeholder='Additional Thoughts..' wrap='soft' onChange={(e) => this.handleThoughtChange(e.target.value)} />
-                <button className='btn' onClick={() => this.addEntry()}>Save Entry</button>
+                <textarea id='input-thoughts' type='text' placeholder='Additional Thoughts..' wrap='soft' onChange={(e) => this.handleThoughtChange(e.target.value)} />
+                <button className='list-btn' onClick={() => this.addEntry()}>Save Entry</button>
             </div>
         )
     }

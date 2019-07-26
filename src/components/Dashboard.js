@@ -3,6 +3,11 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getUser } from '../redux/userReducer';
 import List from './List'
+import DateTime from './DateTime'
+import Weather from './Weather'
+import Background from './Background'
+import Wizard from './Wizard/Wizard'
+
 class Dashboard extends Component {
   componentDidMount() {
     if (!this.props.user.loggedIn) {
@@ -16,8 +21,12 @@ class Dashboard extends Component {
     if (error || redirect) return <Redirect to="/login" />;
     if (!user.loggedIn) return <div>Loading</div>;
     return (
-      <div className="display-container">
-        <List />
+      <div>
+        <Weather />
+        <section className="dash-display-container">
+          <DateTime user={user} />
+          <Wizard />
+        </section>
       </div>
     );
   }

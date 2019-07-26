@@ -88,8 +88,8 @@ class Signup extends Component {
             />
           </div>
           <br />
-          <button onClick={this.signupUser} className="btn normal-btn">
-            Signup
+          <button onClick={this.signupUser} className="normal-btn">
+            Create Account
           </button>
         </div>
 

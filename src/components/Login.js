@@ -11,7 +11,6 @@ class Login extends Component {
             password: ''
         };
     }
-
     handleChange = e => {
         let { name, value } = e.target;
         this.setState({ [name]: value });
@@ -50,20 +49,20 @@ class Login extends Component {
                         />
                     </div>
                     <br />
-                    <button onClick={this.loginUser} className="btn normal-btn">
-                        Login
+                    <span className='btn-container'>
+                        <button onClick={this.loginUser} className="normal-btn">
+                            Login
           </button>
+                    </span>
                 </div>
                 <div />
             </div>
         );
     }
 }
-
 function mapStateToProps(state) {
     return state.user;
 }
-
 export default connect(
     mapStateToProps,
     { login }
