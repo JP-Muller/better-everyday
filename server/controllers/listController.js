@@ -88,10 +88,13 @@ module.exports = {
         index !== -1 && list.splice(index, 1);
         res.status(200).send(list)
     },
+    //// DB DB DB DB DB 
+
     async getPosts(req, res) {
         let { userId } = req.params
         const db = req.app.get('db')
         let posts = await db.get_posts_by_user(+userId)
+        console.log('hit get posts by user!!!')
         res.send(posts)
     },
     async deletePost(req, res) {
@@ -99,17 +102,23 @@ module.exports = {
         const db = req.app.get('db')
         let posts = await db.delete_post([+postId,
         req.session.user.id])
+        console.log('hit delete post!!!!!');
         res.send(posts)
     },
     async editPost(req, res) {
         let { postId } = req.params
-        let { entry, date, imageOfDay } = req.body
+        let { newEntry, newImage, newTask1, newTask2, newTask3, newTask4, newTask5 } = req.body
         const db = req.app.get('db')
         let posts = await db.edit_post([
-            +postId,
-            entry,
-            imageOfDay,
-            date,
+            postId,
+            newEntry,
+            newImage,
+            newTask1,
+            newTask2,
+            newTask3,
+            newTask4,
+            newTask5,
+            req.session.user.id
 
         ])
         res.send(posts)
@@ -118,6 +127,7 @@ module.exports = {
         let { task1, task2, task3, task4, task5, entry, date, imageOfDay } = req.body
         const db = req.app.get('db')
         let posts = await db.add_post([task1, task2, task3, task4, task5, entry, date, imageOfDay, req.session.user.id])
+        console.log('hit Save Post!!!...')
         res.send(posts)
     }
 

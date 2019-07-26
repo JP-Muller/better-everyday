@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { saveTasks } from '../../redux/entryReducer'
+import { saveTasks, getPosts } from '../../redux/entryReducer'
 import { connect } from 'react-redux'
 
 export class Step1 extends Component {
@@ -11,16 +11,10 @@ export class Step1 extends Component {
             initTasks: [],
             accTasks: [],
             completedTasks: this.props.completedTasks,
-            // task1: '',
-            // task2: '',
-            // task3: '',
-            // task4: '',
-            // task5: ''
         }
     }
 
     // componentDidMount() {
-
     // }
 
     inputChange = inputStr => {
@@ -150,5 +144,5 @@ function mapStateToProps(state) {
 }
 export default connect(
     mapStateToProps,
-    { saveTasks }
+    { saveTasks, getPosts }
 )(Step1);

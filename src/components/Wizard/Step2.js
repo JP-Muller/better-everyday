@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { getUser } from '../../redux/userReducer';
-import { saveImageOfDay, saveEntry, savePostDate } from '../../redux/entryReducer'
+import { saveImageOfDay, saveEntry, savePostDate, getPosts } from '../../redux/entryReducer'
 import DateTime from '.././DateTime'
 import Weather from '.././Weather'
 import axios from 'axios'
@@ -23,6 +23,9 @@ export class Step2 extends Component {
         if (!this.props.user.user.loggedIn) {
             this.props.getUser();
             console.log('Got User!')
+        }
+        if (this.props.user.user.loggedIn) {
+            this.props.getPosts(this.props.user.user.id)
         }
     }
 
@@ -122,5 +125,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    { getUser, saveImageOfDay, saveEntry, savePostDate }
+    { getUser, saveImageOfDay, saveEntry, savePostDate, getPosts }
 )(Step2);

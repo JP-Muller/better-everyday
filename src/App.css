@@ -591,15 +591,17 @@ input[type="checkbox"]:checked + label {
 }
 
 .button-row {
-  color: black;
+  color: #ffff;
   display: flex;
   /* align-items: flex-end; */
+  width: 45vw;
   justify-content: space-evenly;
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   margin: auto;
+  padding-bottom: 5px;
 }
 
 /* .middle-buttons {
@@ -610,8 +612,9 @@ input[type="checkbox"]:checked + label {
 }  */
 
 .buttons {
-  background: rgb(89, 0, 255);
+  background: transparent;
   color: #ffff;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   width: 125px;
   font-size: 20px;
   border-radius: 7px;
@@ -620,6 +623,8 @@ input[type="checkbox"]:checked + label {
 
 .nextPrev {
   font-family: "Lobster", cursive;
+  color: #fff;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   display: flex;
   flex-direction: row;
   font-size: 25px;

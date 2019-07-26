@@ -4,7 +4,7 @@ import { logout } from '../redux/userReducer';
 import { Link } from 'react-router-dom';
 
 function Navbar(props) {
-  console.log(props);
+  // console.log(props);
   let date = new Date().toDateString()
   return (
     <div className='navbar nav-background'>

@@ -16,12 +16,12 @@ export class DateTime extends Component {
     getDate = () => {
         let date = new Date().toDateString()
         this.setState({ date })
-        console.log({ date })
+        // console.log({ date })
     }
 
     MornAfterEve = () => {
         const { user } = this.props
-        console.log(user)
+        // console.log(user)
         const date = new Date()
         const currentHr = date.getHours()
         console.log(`Hour ${currentHr}:00!`)

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getUser } from '../../redux/userReducer';
+import { savePost, getPosts } from '../../redux/entryReducer'
 import DateTime from '../DateTime'
 import Weather from '../Weather'
 import axios from 'axios'
@@ -62,9 +63,8 @@ export class Step3 extends Component {
     }
 
     addPost = () => {
-        let { title, content } = this.state;
-        this.setState({ title: '', content: '' });
-        this.props.savePost(title, content);
+        let { task1, task2, task3, task4, task5, entry, date, imageOfDay } = this.state;
+        this.props.savePost(task1, task2, task3, task4, task5, entry, imageOfDay, date);
     };
 
     render() {
@@ -122,7 +122,7 @@ export class Step3 extends Component {
                 </section>
                 <div>
                     <Link to='/wizard/addthoughts' className='list-btn'>Previous</Link>
-                    <Link className='list-btn' to='/entries' onClick={() => this.addEntry()}>Save Post</Link>
+                    <Link className='list-btn' to='/entries' onClick={() => this.addPost()}>Save Post</Link>
                 </div>
             </div >
         )
@@ -138,5 +138,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    { getUser }
+    { getUser, savePost, getPosts }
 )(Step3);
