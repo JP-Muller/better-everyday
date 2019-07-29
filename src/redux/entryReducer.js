@@ -4,7 +4,7 @@ import { ADD_TASKS, ADD_ENTRY, ADD_IMAGE, ADD_DATE, GET_POSTS, SAVE_POST, EDIT_P
 const initialState = {
     initialTasks: [],
     completedTasks: [],
-    imageOfDay: 'https://fsmedia.imgix.net/05/a9/aa/5c/261b/4afa/a99c/ac32c5c1b81e/vault-boy.png?rect=0%2C120%2C1116%2C558&auto=format%2Ccompress&dpr=2&w=650',
+    imageOfDay: 'https://media.tenor.com/images/210681d6ca7aaa4bfde14c3579b8b94d/tenor.gif',
     entry: '',
     date: '',
     task1: '',

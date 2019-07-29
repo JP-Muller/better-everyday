@@ -26,7 +26,7 @@ class Dashboard extends Component {
     if (!user.loggedIn) return <div>Loading</div>;
     return (
       <div>
-        <Weather />
+        {/* <Weather /> */}
         <section className="dash-display-container">
           <DateTime user={user} />
           <Wizard />

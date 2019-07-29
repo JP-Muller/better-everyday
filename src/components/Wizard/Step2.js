@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
+import Tenor from 'react-tenor'
+import TenorStyles from 'react-tenor/dist/styles.css'
 import { connect } from 'react-redux';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { getUser } from '../../redux/userReducer';
 import { saveImageOfDay, saveEntry, savePostDate, getPosts } from '../../redux/entryReducer'
 import DateTime from '.././DateTime'
@@ -13,7 +17,7 @@ export class Step2 extends Component {
         this.state = {
             entry: this.props.entry.entry,
             date: this.props.entry.date,
-            selectedImage: null,
+            tenorSelected: '',
             imageOfDay: this.props.entry.imageOfDay
             // imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-cy2XllAnyu7iP-SecyE0cafs6VP5ulqQcle6VKAqz-jcEytK'
         }
@@ -82,36 +86,59 @@ export class Step2 extends Component {
         if (error || redirect) return <Redirect to="/login" />;
         if (!user.loggedIn) return <div>Loading</div>;
         return (
-            <div>
-                <Weather />
-                <section className='dash-display-container'>
-                    <DateTime user={user} />
-                    <section className='uploader-container'>
-                        <div id='upload-img-preview'>
-                            <img src={imageOfDay} alt='Preview Imagery' />
+            <section className='entries-display-container'>
+                <section className='entry-container-preview'>
+                    <div id='entry-preview'>
+                        <div className='post-container'>
+                            {/* <div className='image-tasks-container'>
+                                <section id='step2-image-of-day'>
+                                    <h3><i><b>Image of the Day</b></i></h3>
+                                    <section className='image-select-container'>
+                                    <section>
+                                    <Tenor token="" initialSearch='good job' onSelect={result => this.setState({ imageOfDay: result.media[0].gif.url })} />
+                                    <img src={imageOfDay} alt='Preview Imagery' />
+                                    </section>
+                                     <section className='tenor-search'>
+                                         <Tenor token="BH9EX9JC7WAE" initialSearch='good job' onSelect={result => this.setState({ imageOfDay: result.media[0].gif.url })} /> 
+                                     </section> 
+                                    </section>
+                                </section>
+                            </div> */}
+                            <div id='upload-img-preview'>
+                                <header className='list-header image-header'>
+                                    <h1>Upload photo of the day</h1>
+                                </header>
+                                <section className='tenor-search'>
+                                    <Tenor token="" onSelect={result => this.setState({ imageOfDay: result.media[0].gif.url })} />
+                                </section>
+                                <img src={imageOfDay} alt='Preview Imagery' />
+                                <p>Image URL:</p>
+                                <input type='text' onChange={(e) => this.handleImageUrl(e.target.value)} />
+                            </div>
+                            <div id='entry-of-day-preview'>
+                                <h3 id='entry-of-day-header-preview'><u>Additional Thoughts</u></h3>
+                                <div id='entry-of-day-text-preview' >
+
+                                    <textarea id='input-thoughts' type='text' wrap='soft' value={entry} onChange={(e) => this.handleThoughtChange(e.target.value)} />
+
+                                </div>
+                            </div>
                         </div>
-                        <header className='list-header'>
-                            <h1>Upload photo of the day</h1>
-                        </header>
-                        <p>Image URL:</p>
-                        <input type='text' onChange={(e) => this.handleImageUrl(e.target.value)} />
-                        <input style={{ display: 'none' }} type='file' onChange={this.handleFileSelection} ref={fileInput => this.fileInput = fileInput} />
-                        <button onClick={() => this.fileInput.click()}>Select File</button>
-                        <button onClick={() => this.fileInput.click()}>Upload</button>
-                        {/* onClick={this.handleImageUpload} */}
-                    </section>
-                    <div className='list-style'>
-                        <header className='list-header'>
-                            <h1>Thoughts about today...</h1>
-                        </header>
-                        <textarea id='input-thoughts' type='text' wrap='soft' value={entry} onChange={(e) => this.handleThoughtChange(e.target.value)} />
+
+                        <div className="button-row"  >
+                            <div className="middle-buttons">
+                                <div>
+                                    <Link to='/' className='list-btn' onClick={() => this.saveData()}>Previous</Link>
+                                    <Link className='list-btn' onClick={this.saveData} to='/wizard/postpreview'>Save Post</Link>
+                                </div>
+                            </div>
+
+
+                        </div>
+
                     </div>
                 </section>
-                <div>
-                    <Link to='/' className='list-btn' onClick={() => this.saveData()}>Previous</Link>
-                    <Link className='list-btn' onClick={this.saveData} to='/wizard/postpreview'>Save Post</Link>
-                </div>
-            </div>
+            </section>
         )
     }
 }

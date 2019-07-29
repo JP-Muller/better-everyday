@@ -168,12 +168,11 @@ class Entries extends Component {
         let { list, editing, newEntry, newImage, newTask1, newTask2, newTask3, newTask4, newTask5 } = this.state
         let { posts } = this.props.entry
         return (
-            <section className='dash-display-container'>
-                <DateTime user={this.props.user.user} />
+            <section className='entries-display-container'>
+                {/* <DateTime user={this.props.user.user} /> */}
                 <section className='entry-container-preview'>
                     {editing ? (
                         <div id='entry-preview'>
-                            <h2> Post Preview </h2>
                             <hr />
                             <div id='entry-date'>
                                 {posts[i].date_posted}
@@ -191,11 +190,11 @@ class Entries extends Component {
                                 <hr />
                                 <h3><i className='icon far fa-check-square checkIcon' /> <u>Completed Tasks</u> <i className='icon far fa-check-square entryIconRight' /></h3>
                                 <ul id='completed-task-list-preview' key='targetTask'>
-                                    <div><li> <input defaultValue={posts[i].task_1} onChange={this.handleChange} name='newTask1' className='input-row' /> </li></div>
-                                    <div><li> <input defaultValue={posts[i].task_2} onChange={this.handleChange} name='newTask2' className='input-row' /> </li></div>
-                                    <div><li> <input defaultValue={posts[i].task_3} onChange={this.handleChange} name='newTask3' className='input-row' /> </li></div>
-                                    <div><li> <input defaultValue={posts[i].task_4} onChange={this.handleChange} name='newTask4' className='input-row' /> </li></div>
-                                    <div><li> <input defaultValue={posts[i].task_5} onChange={this.handleChange} name='newTask5' className='input-row' /> </li></div>
+                                    <div className='task1'><li> <input defaultValue={posts[i].task_1} onChange={this.handleChange} name='newTask1' className='input-row' /> </li></div>
+                                    <div className='task2'><li> <input defaultValue={posts[i].task_2} onChange={this.handleChange} name='newTask2' className='input-row' /> </li></div>
+                                    <div className='task3'><li> <input defaultValue={posts[i].task_3} onChange={this.handleChange} name='newTask3' className='input-row' /> </li></div>
+                                    <div className='task4'><li> <input defaultValue={posts[i].task_4} onChange={this.handleChange} name='newTask4' className='input-row' /> </li></div>
+                                    <div className='task5'><li> <input defaultValue={posts[i].task_5} onChange={this.handleChange} name='newTask5' className='input-row' /> </li></div>
                                 </ul>
                             </div>
                             < hr />
@@ -205,57 +204,63 @@ class Entries extends Component {
                                     <textarea wrap='soft' id='update-thought' defaultValue={posts[i].entry} onChange={this.handleChange} name='newEntry' onKeyDown={this.handleEditingDone} />
                                 </div>
                                 <hr />
-                            </div>
-                            <div className="button-row"  >
-                                <div className="middle-buttons">
-                                    <button className="buttons" onClick={() => this.handleCancelEdit()} >Go Back</button>
-                                    <button className="buttons" onClick={this.saveChanges}>Save</button>
+                                <div className="button-row"  >
+                                    <div className="middle-buttons">
+                                        <button className="buttons" onClick={() => this.handleCancelEdit()} >Go Back</button>
+                                        <button className="buttons" onClick={this.saveChanges}>Save</button>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
                     ) : (
                             <div id='entry-preview'>
-                                <h2> Post Preview </h2>
-                                <hr />
                                 <div id='entry-date'>
                                     {posts[i].date_posted}
                                     <div> {+i + 1}/{posts.length}</div>
                                 </div>
-                                <hr />
-                                <section id='image-of-day'>
-                                    <h3><i><b>Image of the Day</b></i></h3>
-                                    <img src={posts[i].image} alt='Preview Imagery' />
-                                </section>
-                                <div id='completed-task-preview'>
-                                    <hr />
-                                    <h3><i className='icon far fa-check-square checkIcon' /> <u>Completed Tasks</u> <i className='icon far fa-check-square entryIconRight' /></h3>
-                                    <ul id='completed-task-list-preview' key='targetTask'>
-                                        <div><li> {posts[i].task_1} </li></div>
-                                        <div><li> {posts[i].task_2} </li></div>
-                                        <div><li> {posts[i].task_3} </li></div>
-                                        <div><li> {posts[i].task_4} </li></div>
-                                        <div><li> {posts[i].task_5} </li></div>
-                                    </ul>
-                                </div>
-                                < hr />
-                                <div id='entry-of-day-preview'>
-                                    <h3 id='entry-of-day-header-preview'><u>Additional Thoughts</u></h3>
-                                    <div id='entry-of-day-text-preview' >
+                                <div className='post-container'>
+                                    <div className='image-tasks-container'>
+                                        <section id='image-of-day'>
+                                            <h3><i><b>Image of the Day</b></i></h3>
+                                            <img src={posts[i].image} alt='Preview Imagery' />
+                                        </section>
+                                        <div id='completed-task-preview'>
+                                            <header id='completed-tasks-header'>
+                                                <i className='icon far fa-check-square checkIcon' /><h3> Completed Tasks </h3>  <i className='icon far fa-check-square checkIcon' />
+                                            </header>
+                                            <ul id='completed-task-list-preview' key='targetTask'>
+                                                <div className='task'><div className='task-number-cont'>1 </div><li> {posts[i].task_1} </li></div>
+                                                <div className='task'><div className='task-number-cont'>2</div><li> {posts[i].task_2} </li></div>
+                                                <div className='task'><div className='task-number-cont'>3</div><li> {posts[i].task_3} </li></div>
+                                                <div className='task'><div className='task-number-cont'>4</div><li> {posts[i].task_4} </li></div>
+                                                <div className='task'><div className='task-number-cont'>5</div><li> {posts[i].task_5} </li></div>
+                                            </ul>
 
-                                        {editing ? (<textarea wrap='soft' id='update-thought' defaultValue={list[i].thought} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this.handleEditingDone} />) : (
-                                            <p>{posts[i].entry}</p>
-                                        )}
+                                        </div>
                                     </div>
-                                    <hr />
+
+                                    <div id='entry-of-day-preview'>
+                                        <h3 id='entry-of-day-header-preview'><u>Additional Thoughts</u></h3>
+                                        <div id='entry-of-day-text-preview' >
+
+                                            {editing ? (<textarea wrap='soft' id='update-thought' defaultValue={list[i].thought} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this.handleEditingDone} />) : (
+                                                <p>{posts[i].entry}</p>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
+
                                 <div className="button-row"  >
                                     <button className="nextPrev" onClick={this.handlePrevious} onKeyDown={this.handleKeyPrev}>{'< Previous'}</button>
                                     <div className="middle-buttons">
-                                        <button className="buttons" onClick={this.handleEditing}>Edit Thought</button>
+                                        <button className="buttons" onClick={this.handleEditing}>Edit</button>
                                         <button className="buttons" onClick={() => this.deleteEntry(i)} >Delete</button>
                                     </div>
                                     <button className="nextPrev" onClick={this.handleNext} onKeyDown={this.handleKeyNext}>{'Next >'}</button>
+
                                 </div>
+
                             </div>
                         )}
                 </section>

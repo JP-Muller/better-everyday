@@ -21,9 +21,10 @@ export class Account extends Component {
         let { firstName, lastName, username, email } = user
         return (
             <div className='account-info-container'>
-                <h2>Change Account Details</h2>
+                <h2>Update User Settings</h2>
+                <hr />
                 <div className='account-details-container'>
-                    <div className='input-row'>
+                    <div className='account-input-row'>
                         First Name:
                 <input
                             type="text"
@@ -33,7 +34,7 @@ export class Account extends Component {
                             className="input"
                         />
                     </div>
-                    <div className='input-row'>
+                    <div className='account-input-row'>
                         Last Name:
                     <input
                             type="text"
@@ -43,7 +44,7 @@ export class Account extends Component {
                             className="input"
                         />
                     </div>
-                    <div className='input-row'>
+                    <div className='account-input-row'>
                         Username:
                     <input
                             type="text"
@@ -53,7 +54,7 @@ export class Account extends Component {
                             className="input"
                         />
                     </div>
-                    <div className='input-row'>
+                    <div className='account-input-row'>
                         Email:
                     <input
                             type="text"
