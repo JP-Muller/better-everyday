@@ -109,7 +109,7 @@ export class Step2 extends Component {
                                     <h1>Upload photo of the day</h1>
                                 </header>
                                 <section className='tenor-search'>
-                                    <Tenor token="" onSelect={result => this.setState({ imageOfDay: result.media[0].gif.url })} />
+                                    <Tenor token="BH9EX9JC7WAE" onSelect={result => this.setState({ imageOfDay: result.media[0].gif.url })} />
                                 </section>
                                 <img src={imageOfDay} alt='Preview Imagery' />
                                 <p>Image URL:</p>

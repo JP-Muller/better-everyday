@@ -48,33 +48,39 @@ class Weather extends Component {
         // if (weatherData.weather[0].description) description = weatherData.weather[0].description
         if (weatherDescription === 'clear sky') {
             console.log('Clear Skies Today!')
-            return < i className="far fa-sun" />
+            return < i className="far fa-sun" title='Clear Skies' />
         } else if (weatherDescription === 'few clouds') {
             console.log('Few Clouds Today!')
-            return <i className="fas fa-cloud-sun" />
+            return <i className="fas fa-cloud-sun" title='Few Clouds' />
         } else if (weatherDescription === 'scattered clouds') {
             console.log('Scattered Clouds Today!')
-            return <i className="fas fa-cloud" />
+            return <i className="fas fa-cloud" title='Scattered Clouds' />
         } else if (weatherDescription === 'broken clouds') {
             console.log('Broken Clouds Today!')
-            return <i className="fas fa-cloud" />
+            return <i className="fas fa-cloud" title='Broken Clouds' />
         } else if (weatherDescription === 'shower rain') {
             console.log('Shower Rain Today!')
-            return <i className="fas fa-cloud-showers-heavy" />
+            return <i className="fas fa-cloud-showers-heavy" title='Shower Rain' />
         } else if (weatherDescription === 'rain') {
             console.log('Rain Today!')
-            return <i className="fas fa-cloud-rain" />
+            return <i className="fas fa-cloud-rain" title='Rain' />
+        } else if (weatherDescription === 'light rain') {
+            console.log('Light Rain!')
+            return <i className='fas fa-cloud-rain' title='Light Rain' />
         } else if (weatherDescription === 'thunderstorm') {
             console.log('Thunderstorms!')
-            return <i className="fas fa-poo-storm" />
+            return <i className="fas fa-poo-storm" title='Thunderstorm' />
         } else if (weatherDescription === 'snow') {
             console.log(`It's snowing!`)
-            return <i className="far fa-snowflake" />
+            return <i className="far fa-snowflake" title='Snow' />
         } else if (weatherDescription === 'mist') {
             console.log('Foggy Day..')
-            return <i className="fas fa-smog" />
+            return <i className="fas fa-smog" title='Misty' />
+        } else if (weatherDescription === 'haze') {
+            console.log('Hazy')
+            return <i className="fas fa-smog" title='Hazy' />
         } else {
-            return <i className="far fa-sad-tear" />
+            return <i className="far fa-sad-tear" title='Unknown' />
         }
     }
 
@@ -89,11 +95,8 @@ class Weather extends Component {
         console.log(location)
         return (
             <div className='weather-time-container'>
-                <section>
-                    lol
-                </section>
                 <section className='weather-widget'>
-                    <h2> {this.getWeatherIcon()} {temperature} &#176;</h2>
+                    <h3> {this.getWeatherIcon()} {temperature} &#176;</h3>
                     <h3>{location.city}, {location.region}</h3>
                 </section>
             </div>

@@ -60,8 +60,8 @@ export function savePost(task1, task2, task3, task4, task5, entry, date, imageOf
 
 // saving state
 export const saveTasks = (taskArray) => {
-    let data = [...taskArray]
-    console.log('Saved Checked Tasks to Store')
+    let data = taskArray.filter(obj => obj.checked === true)
+    console.log('Saved Checked Tasks to Store:', data)
     return {
         type: ADD_TASKS,
         payload: data
@@ -102,7 +102,7 @@ export default function (state = initialState, action) {
     switch (type) {
         case ADD_TASKS:
             console.log(payload)
-            return { ...state, completedTasks: payload, loading: false, task1: payload[0], task2: payload[1], task3: payload[2], task4: payload[3], task5: payload[4] }
+            return { ...state, completedTasks: payload, loading: false }
         case ADD_ENTRY:
             return { ...state, entry: payload }
         case ADD_IMAGE:
@@ -115,7 +115,7 @@ export default function (state = initialState, action) {
                 ...state,
                 posts: payload,
                 completedTasks: [],
-                imageOfDay: 'https://fsmedia.imgix.net/05/a9/aa/5c/261b/4afa/a99c/ac32c5c1b81e/vault-boy.png?rect=0%2C120%2C1116%2C558&auto=format%2Ccompress&dpr=2&w=650',
+                imageOfDay: 'https://media.tenor.com/images/210681d6ca7aaa4bfde14c3579b8b94d/tenor.gif',
                 entry: '',
                 date: '',
                 task1: '',

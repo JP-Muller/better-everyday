@@ -5,10 +5,12 @@ class Inspire extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            quotes: []
+            quotes: [],
+            isHovering: false
 
         }
     }
+
     componentDidMount() {
         axios
             .get('https://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json')
@@ -21,15 +23,26 @@ class Inspire extends Component {
                 console.log('err from server', err)
             })
     }
+
+    handleMouseHover = () => {
+        this.setState(this.toggleHoverState);
+    }
+
+    toggleHoverState = (state) => {
+        return {
+            isHovering: !state.isHovering,
+        };
+    }
     render() {
         let { quotes } = this.state
         return (
             <div className='quote-container'>
-                <section id='random-quote'>
+                <section id='random-quote' onMouseEnter={this.handleMouseHover}
+                    onMouseLeave={this.handleMouseHover}>
                     <p>"{quotes.quoteText}"</p>
-                    <section id='quote-credit'>
+                    {this.state.isHovering ? (<section id='quote-credit'>
                         -{quotes.quoteAuthor}
-                    </section>
+                    </section>) : null}
                 </section>
 
             </div>

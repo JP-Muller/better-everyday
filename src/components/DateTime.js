@@ -6,7 +6,9 @@ export class DateTime extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            date: ''
+            date: '',
+            militaryTime: false,
+            greetingFlip: false
         }
     }
     componentDidMount() {
@@ -17,6 +19,20 @@ export class DateTime extends Component {
         let date = new Date().toDateString()
         this.setState({ date })
         // console.log({ date })
+    }
+
+    handleDoubleClick = () => {
+        let { militaryTime } = this.state
+        this.setState({
+            militaryTime: !militaryTime
+        })
+    }
+
+    handleGreetingClick = () => {
+        let { greetingFlip } = this.state
+        this.setState({
+            greetingFlip: !greetingFlip
+        })
     }
 
     MornAfterEve = () => {
@@ -36,13 +52,17 @@ export class DateTime extends Component {
     }
 
     render() {
+        const { user } = this.props
         return (
             <div id='date-div'>
-                <div id='live-clock'>
-                    <h1><Clock format={'h:mm:ss'} ticking={true} /></h1>
+                <div id='live-clock' onDoubleClick={this.handleDoubleClick}>
+                    {!this.state.militaryTime ? (<h1><Clock format={'h:mm:ss'} ticking={true} /></h1>)
+                        : (<h1><Clock format={'HH:mm:ss'} ticking={true} /></h1>)}
+
                 </div>
-                <div id='hour-greeting'>
-                    <h2>{this.MornAfterEve()}</h2>
+                <div id='hour-greeting' onDoubleClick={this.handleGreetingClick}>
+                    {!this.state.greetingFlip ? (<h2>{this.MornAfterEve()}</h2>) : (<h2><div id='hour-greeting'>Trust your intuition, {user.firstName}. </div></h2>)}
+
                 </div>
             </div>
 

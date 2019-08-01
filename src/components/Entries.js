@@ -5,6 +5,7 @@ import { getUser } from '../redux/userReducer'
 import { getPosts, editPost, deletePost } from '../redux/entryReducer'
 import DateTime from './DateTime'
 import axios from 'axios';
+const parse = require('html-react-parser')
 
 class Entries extends Component {
     constructor(props) {
@@ -29,7 +30,6 @@ class Entries extends Component {
     componentDidMount() {
         let { user } = this.props.user
         let { posts } = this.props.entry
-        let userId = user.id
         if (!user.loggedIn) {
             this.props.getUser();
             console.log('Got User!')
@@ -167,6 +167,8 @@ class Entries extends Component {
     readEntry(i) {
         let { list, editing, newEntry, newImage, newTask1, newTask2, newTask3, newTask4, newTask5 } = this.state
         let { posts } = this.props.entry
+        let completedTasks = []
+        if (posts[i].task_1) { (completedTasks.push(posts[i].task_1, posts[i].task_2, posts[i].task_3, posts[i].task_4, posts[i].task_5)) }
         return (
             <section className='entries-display-container'>
                 {/* <DateTime user={this.props.user.user} /> */}
@@ -229,13 +231,14 @@ class Entries extends Component {
                                             <header id='completed-tasks-header'>
                                                 <i className='icon far fa-check-square checkIcon' /><h3> Completed Tasks </h3>  <i className='icon far fa-check-square checkIcon' />
                                             </header>
-                                            <ul id='completed-task-list-preview' key='targetTask'>
-                                                <div className='task'><div className='task-number-cont'>1 </div><li> {posts[i].task_1} </li></div>
-                                                <div className='task'><div className='task-number-cont'>2</div><li> {posts[i].task_2} </li></div>
-                                                <div className='task'><div className='task-number-cont'>3</div><li> {posts[i].task_3} </li></div>
-                                                <div className='task'><div className='task-number-cont'>4</div><li> {posts[i].task_4} </li></div>
-                                                <div className='task'><div className='task-number-cont'>5</div><li> {posts[i].task_5} </li></div>
-                                            </ul>
+
+                                            {completedTasks.map((taskItem, i) =>
+                                                <div className='task-container'
+                                                    key={i}>
+
+                                                    {taskItem ? <div className='preview-task-item' >{taskItem}</div> : null}
+
+                                                </div>)}
 
                                         </div>
                                     </div>
@@ -245,13 +248,13 @@ class Entries extends Component {
                                         <div id='entry-of-day-text-preview' >
 
                                             {editing ? (<textarea wrap='soft' id='update-thought' defaultValue={list[i].thought} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this.handleEditingDone} />) : (
-                                                <p>{posts[i].entry}</p>
+                                                <p>{parse(posts[i].entry)}</p>
                                             )}
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="button-row"  >
+                                <div className="entry-button-row"  >
                                     <button className="nextPrev" onClick={this.handlePrevious} onKeyDown={this.handleKeyPrev}>{'< Previous'}</button>
                                     <div className="middle-buttons">
                                         <button className="buttons" onClick={this.handleEditing}>Edit</button>
@@ -273,9 +276,6 @@ class Entries extends Component {
     render() {
         let { user, error, redirect } = this.props.user;
         let { posts } = this.props.entry
-        // let userId = user.id
-        // console.log(userId)
-        // this.setState({ userId })
         if (error || redirect) return <Redirect to="/login" />;
         if (!user.loggedIn) return <div>Loading</div>;
         if (posts.length === 0) {

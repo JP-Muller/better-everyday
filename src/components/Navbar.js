@@ -2,16 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { logout } from '../redux/userReducer';
 import { Link } from 'react-router-dom';
+import Weather from './Weather'
 
 function Navbar(props) {
   // console.log(props);
   let date = new Date().toDateString()
   return (
     <div className='navbar nav-background'>
-      <h1 className='nav-header'>
-        <i className='icon far fa-check-square checkIcon' />
-        Better Everyday
-      </h1>
+      <header className='nav-header'>
+        {!props.user.loggedIn ? (<i className='icon far fa-check-square checkIcon' />) : (<i className="fas fa-bars" onClick={props.drawerClickHandler} />)}
+        <h1><Link to='/'>Better Everyday</Link></h1>
+      </header>
       {props.user.loggedIn ? (
         <div id='date-header'>
           <h3>{date}</h3>
@@ -19,13 +20,14 @@ function Navbar(props) {
       ) : null}
       {props.user.loggedIn ? (
         <div className='nav-link-container'>
-          <Link to='/' className='nav-link'>Home</Link>
+          <Weather />
+          {/* <Link to='/' className='nav-link'>Home</Link>
           <Link to='/entries' className='nav-link'>Entries</Link>
           <Link to='/account' className='nav-link'>Account</Link>
           <Link to='/about' className='nav-link'>About</Link>
           <button onClick={props.logout} className="warning-btn">
             <i className="fas fa-sign-out-alt"></i>
-          </button>
+          </button> */}
         </div>
       ) : (
           <span>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 export class Account extends Component {
@@ -8,7 +9,8 @@ export class Account extends Component {
             newfirstName: '',
             newlastName: '',
             newUsername: '',
-            newEmail: ''
+            newEmail: '',
+            newProfileImage: ''
         }
     }
     handleChange = e => {
@@ -17,16 +19,30 @@ export class Account extends Component {
         console.log(`${name}: ${value}`)
     };
     render() {
-        let { user } = this.props
+        let { user, error, redirect } = this.props
         let { firstName, lastName, username, email } = user
+        if (error || redirect) return <Redirect to="/login" />;
+        if (!user.loggedIn) return <div>Loading</div>;
         return (
             <div className='account-info-container'>
                 <h2>Update User Settings</h2>
                 <hr />
                 <div className='account-details-container'>
+                    <div className='account-image-preview'>
+                        <img src='https://images.stubsites.com/webassets.ticketmob.com/LS/images/comedians/40FB835C-077B-196D-1E457C9F115E07AD.jpg' />
+                    </div>
+                    Profile Picture:
                     <div className='account-input-row'>
-                        First Name:
-                <input
+                        <input
+                            type="text"
+                            name="newProfileImage"
+                            onChange={this.handleChange}
+                            className="input"
+                        />
+                    </div>
+                    First Name:
+                    <div className='account-input-row'>
+                        <input
                             type="text"
                             value={firstName}
                             name="newFirstName"
@@ -34,9 +50,10 @@ export class Account extends Component {
                             className="input"
                         />
                     </div>
+                    Last Name:
                     <div className='account-input-row'>
-                        Last Name:
-                    <input
+
+                        <input
                             type="text"
                             value={lastName}
                             name="newLastName"
@@ -44,9 +61,9 @@ export class Account extends Component {
                             className="input"
                         />
                     </div>
+                    Username:
                     <div className='account-input-row'>
-                        Username:
-                    <input
+                        <input
                             type="text"
                             value={username}
                             name="newUsername"
@@ -54,9 +71,10 @@ export class Account extends Component {
                             className="input"
                         />
                     </div>
+                    Email:
                     <div className='account-input-row'>
-                        Email:
-                    <input
+
+                        <input
                             type="text"
                             value={email}
                             name="newEmail"

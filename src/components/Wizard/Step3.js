@@ -6,6 +6,8 @@ import { savePost, getPosts } from '../../redux/entryReducer'
 import DateTime from '../DateTime'
 import Weather from '../Weather'
 import axios from 'axios'
+const parse = require('html-react-parser')
+
 
 export class Step3 extends Component {
     constructor(props) {
@@ -15,11 +17,7 @@ export class Step3 extends Component {
             date: this.props.entry.date,
             selectedImage: null,
             imageOfDay: this.props.entry.imageOfDay,
-            task1: this.props.entry.completedTasks[0],
-            task2: this.props.entry.completedTasks[1],
-            task3: this.props.entry.completedTasks[2],
-            task4: this.props.entry.completedTasks[3],
-            task5: this.props.entry.completedTasks[4],
+            noTask: null,
             list: []
         }
     }
@@ -37,7 +35,6 @@ export class Step3 extends Component {
             this.props.getUser();
             console.log('Got User!')
         }
-        console.log('testing:', this.state.task1)
     }
 
     addEntry = () => {
@@ -63,8 +60,19 @@ export class Step3 extends Component {
     }
 
     addPost = () => {
-        let { task1, task2, task3, task4, task5, entry, date, imageOfDay } = this.state;
-        this.props.savePost(task1, task2, task3, task4, task5, entry, imageOfDay, date);
+        let { noTask, entry, date, imageOfDay } = this.state;
+        let { completedTasks } = this.props.entry
+        if (completedTasks.length === 1) {
+            this.props.savePost(completedTasks[0].title, noTask, noTask, noTask, noTask, entry, imageOfDay, date)
+        } else if (completedTasks.length === 2) {
+            this.props.savePost(completedTasks[0].title, completedTasks[1].title, noTask, noTask, noTask, entry, imageOfDay, date)
+        } else if (completedTasks.length === 3) {
+            this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, noTask, noTask, entry, imageOfDay, date)
+        } else if (completedTasks.length === 4) {
+            this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, completedTasks[3].title, noTask, entry, imageOfDay, date)
+        } else if (completedTasks.length === 5) {
+            this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, completedTasks[3].title, completedTasks[4].title, entry, imageOfDay, date);
+        } else { console.log(`Can't add post..`); }
     };
 
     render() {
@@ -74,15 +82,14 @@ export class Step3 extends Component {
         if (!user.loggedIn) return <div>Loading</div>;
         return (
             <div className='entries-display-container'>
-                <DateTime user={user} />
+                {/* <DateTime user={user} /> */}
                 <section className='entry-container-preview'>
                     <div id='entry-preview'>
-                        <h2> Post Preview </h2>
-                        <hr />
+
                         <div id='entry-date'>
                             {date}
+                            <div><h2> Post Preview </h2></div>
                         </div>
-                        <hr />
                         <div className='post-container'>
                             <div className='image-tasks-container'>
                                 <section id='image-of-day'>
@@ -93,25 +100,27 @@ export class Step3 extends Component {
                                     <header id='completed-tasks-header'>
                                         <i className='icon far fa-check-square checkIcon' /><h3> Completed Tasks </h3>  <i className='icon far fa-check-square checkIcon' />
                                     </header>
-                                    <ul id='completed-task-list-preview' key='targetTask'>
-                                        <div><li> {completedTasks[0]} </li></div>
-                                        <div><li> {completedTasks[1]} </li></div>
-                                        <div><li> {completedTasks[2]} </li></div>
-                                        <div><li> {completedTasks[3]} </li></div>
-                                        <div><li> {completedTasks[4]} </li></div>
-                                        {/* <div><li> {completedTasks[5]} </li></div> */}
-                                        {/* <div><li> {list[i].accTasks[6]} </li></div>
-                                    <div><li> {list[i].accTasks[7]} </li></div>
-                                    <div><li> {list[i].accTasks[8]} </li></div>
-                                    <div><li> {list[i].accTasks[9]} </li></div>
-                                    <div><li> {list[i].accTasks[10]} </li></div> */}
-                                    </ul>
+                                    {completedTasks.map((taskItem, i) =>
+                                        <div className='task-container'
+                                            key={i}>
+                                            <div className='preview-task-item' >
+                                                {taskItem.title}
+                                            </div>
+                                        </div>)}
+                                    {/* <ul id='completed-task-list-preview' key='targetTask'>
+                                        <div><li> {completedTasks[0].title} </li></div>
+                                        <div><li> {completedTasks[1].title} </li></div>
+                                        <div><li> {completedTasks[2].title} </li></div>
+                                        <div><li> {completedTasks[3].title} </li></div>
+                                        <div><li> {completedTasks[4].title} </li></div>
+                                     
+                                    </ul> */}
                                 </div>
                             </div>
                             <div id='entry-of-day-preview'>
                                 <h3 id='entry-of-day-header-preview'><u>Additional Thoughts</u></h3>
                                 <div id='entry-of-day-text-preview' >
-                                    {entry}
+                                    {parse(entry)}
                                     {/* {editing ? (<textarea wrap='soft' id='update-thought' defaultValue={list[i].thought} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this.handleEditingDone} />) : (
                                         <p>{entry}</p>
                                     )} */}
@@ -122,7 +131,7 @@ export class Step3 extends Component {
                 </section>
 
                 <div>
-                    <Link to='/wizard/addthoughts' className='list-btn'>Previous</Link>
+                    <Link to='/' className='list-btn'>Previous</Link>
                     <Link className='list-btn' to='/entries' onClick={() => this.addPost()}>Save Post</Link>
                 </div>
             </div >
