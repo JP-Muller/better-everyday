@@ -61,7 +61,6 @@ module.exports = {
         list[index].thought = newThought
         res.status(200).send(list)
     },
-
     addItem(req, res) {
         console.log('hit addItem')
         const { date, completedTasks, entry, imageOfDay } = req.body
@@ -122,6 +121,21 @@ module.exports = {
 
         ])
         res.send(posts)
+    },
+    async editPostImage(req, res) {
+        let { postId } = req.params
+        let { newImage } = req.body
+        const db = req.app.get('db')
+        let posts = await db.edit_post_image([postId, newImage, req.session.user.id])
+        res.send(posts)
+    },
+    async editPostEntry(req, res) {
+        let { postId } = req.params
+        let { newEntry } = req.body
+        const db = req.app.get('db')
+        let posts = await db.edit_post_entry([postId, newEntry, req.session.user.id])
+        res.send(posts)
+
     },
     async savePost(req, res) {
         let { task1, task2, task3, task4, task5, entry, date, imageOfDay } = req.body

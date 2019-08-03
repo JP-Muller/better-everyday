@@ -19,7 +19,7 @@ class Weather extends Component {
 
     componentDidMount() {
         axios
-            .get(`https://ipinfo.io/geo/?token=`).then(res => {
+            .get(``).then(res => {
                 this.setState({ location: res.data }, () => this.getLocalWeather())
             })
             .catch(err => {
@@ -31,7 +31,7 @@ class Weather extends Component {
     getLocalWeather = () => {
         const { location } = this.state
         axios
-            .get(`https://api.openweathermap.org/data/2.5/weather?q=${location.city}&appid=`).then(res => {
+            .get(``).then(res => {
                 this.setState({ weatherData: res.data }, () => {
                     const { weatherData } = this.state
                     this.setState({ weatherDescription: weatherData.weather[0].description })
@@ -61,12 +61,17 @@ class Weather extends Component {
         } else if (weatherDescription === 'shower rain') {
             console.log('Shower Rain Today!')
             return <i className="fas fa-cloud-showers-heavy" title='Shower Rain' />
+        } else if (weatherDescription === 'heavy intensity rain') {
+            console.log('High intensity rain')
+            return <i className="fas fa-cloud-showers-heavy" title='High Intensity Rain' />
         } else if (weatherDescription === 'rain') {
             console.log('Rain Today!')
             return <i className="fas fa-cloud-rain" title='Rain' />
         } else if (weatherDescription === 'light rain') {
             console.log('Light Rain!')
             return <i className='fas fa-cloud-rain' title='Light Rain' />
+        } else if (weatherDescription === 'moderate rain') {
+            return <i className='fas fa-cloud-rain' title='Moderate Rain' />
         } else if (weatherDescription === 'thunderstorm') {
             console.log('Thunderstorms!')
             return <i className="fas fa-poo-storm" title='Thunderstorm' />

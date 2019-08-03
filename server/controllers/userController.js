@@ -15,7 +15,11 @@ module.exports = {
         firstName: existingUser.first_name,
         lastName: existingUser.last_name,
         email: existingUser.email,
-        loggedIn: true
+        loggedIn: true,
+        xp: existingUser.xp,
+        level: existingUser.level,
+        score_streak: existingUser.score_streak,
+        image: existingUser.image
       };
       res.send(req.session.user);
     } else res.status(401).send('Username or password incorrect');
@@ -45,5 +49,28 @@ module.exports = {
   },
   getUser(req, res) {
     res.send(req.session.user);
+  },
+  async levelUp(req, res) {
+    const db = req.app.get('db')
+    let user = await db.level_up(req.session.user.id)
+    console.log(user)
+    res.send(user)
+  },
+  async addToStreak(req, res) {
+    const db = req.app.get('db')
+    let user = await db.add_to_streak(req.session.user.id)
+    console.log(user)
+    res.send(user)
+  },
+  async removeStreak(req, res) {
+    const db = req.app.get('db')
+    let user = await db.remove_streak(req.session.user.id)
+    res.send(user)
+  },
+  async getScores(req, res) {
+    const db = req.app.get('db')
+    let user = await db.get_user_scores(req.session.user.id)
+    res.send(user)
   }
 };
+

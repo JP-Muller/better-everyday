@@ -35,5 +35,26 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#config-web-app -->
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyDFnoHndaAcJSsbEuu_DoGXYftHyCjduCE",
+        authDomain: "better-everyday-a2a36.firebaseapp.com",
+        databaseURL: "https://better-everyday-a2a36.firebaseio.com",
+        projectId: "better-everyday-a2a36",
+        storageBucket: "better-everyday-a2a36.appspot.com",
+        messagingSenderId: "99079884973",
+        appId: "1:99079884973:web:4be1e39ecc3ee554"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
   </body>
 </html>

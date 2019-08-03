@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { getUser } from '../redux/userReducer';
 
 export class Account extends Component {
     constructor() {
@@ -13,25 +14,44 @@ export class Account extends Component {
             newProfileImage: ''
         }
     }
+    componentDidMount() {
+        this.props.getUser()
+        console.log(this.props.user);
+    }
     handleChange = e => {
         let { name, value } = e.target
         this.setState({ [name]: value })
         console.log(`${name}: ${value}`)
     };
     render() {
-        let { user, error, redirect } = this.props
-        let { firstName, lastName, username, email } = user
+
+        let { user, error, redirect } = this.props.user
+        let { totalPosts } = this.props.entry
+        console.log(user)
+        let { firstName, lastName, username, email, level, xp, score_streak, image } = user
         if (error || redirect) return <Redirect to="/login" />;
         if (!user.loggedIn) return <div>Loading</div>;
+        let splitLastName = lastName.split('')
         return (
             <div className='account-info-container'>
                 <h2>Update User Settings</h2>
                 <hr />
                 <div className='account-details-container'>
-                    <div className='account-image-preview'>
-                        <img src='https://images.stubsites.com/webassets.ticketmob.com/LS/images/comedians/40FB835C-077B-196D-1E457C9F115E07AD.jpg' />
-                    </div>
-                    Profile Picture:
+                    <section className='account-container'>
+                        <div className='account-image-preview'>
+                            <img src={image} />
+                            <div><h1>{username}</h1></div>
+                            <div><h2>{firstName} {splitLastName[0]}</h2> </div>
+                            <div><h3>{email}</h3></div>
+                        </div>
+                        <section className='account-stats'>
+                            <div className='stat-container'><h3>Level: </h3> <h2>{level}</h2></div>
+                            <div className='stat-container'><h3>Total XP: </h3> <h2>{xp}</h2></div>
+                            <div className='stat-container'><h3>Current Score Streak: </h3><h2>{score_streak}</h2></div>
+                            <div className='stat-container'><h3>Total Posts:</h3><h2>{totalPosts}</h2></div>
+                        </section>
+                    </section>
+                    {/* Profile Picture:
                     <div className='account-input-row'>
                         <input
                             type="text"
@@ -44,7 +64,7 @@ export class Account extends Component {
                     <div className='account-input-row'>
                         <input
                             type="text"
-                            value={firstName}
+                            defaultValue={firstName}
                             name="newFirstName"
                             onChange={this.handleChange}
                             className="input"
@@ -55,7 +75,7 @@ export class Account extends Component {
 
                         <input
                             type="text"
-                            value={lastName}
+                            defaultValue={lastName}
                             name="newLastName"
                             onChange={this.handleChange}
                             className="input"
@@ -65,7 +85,7 @@ export class Account extends Component {
                     <div className='account-input-row'>
                         <input
                             type="text"
-                            value={username}
+                            defaultValue={username}
                             name="newUsername"
                             onChange={this.handleChange}
                             className="input"
@@ -81,7 +101,7 @@ export class Account extends Component {
                             onChange={this.handleChange}
                             className="input"
                         />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         )
@@ -89,6 +109,9 @@ export class Account extends Component {
 }
 
 function mapStateToProps(state) {
-    return state.user
+    return {
+        user: state.user,
+        entry: state.entry
+    }
 }
-export default connect(mapStateToProps)(Account)
+export default connect(mapStateToProps, { getUser })(Account)

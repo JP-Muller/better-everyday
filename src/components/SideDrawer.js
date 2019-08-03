@@ -1,33 +1,59 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { logout } from '../redux/userReducer';
+import { logout, getUser, getUserScores } from '../redux/userReducer';
 import { Link } from 'react-router-dom'
 
 
 class SideDrawer extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { seconds: 0 };
+    }
+
+    tick() {
+        this.setState(prevState => ({
+            seconds: prevState.seconds + 1
+        }));
+    }
+
+    componentDidMount() {
+        this.interval = setInterval(() => this.tick(), 5000);
+        if (this.props.user.loggedIn) {
+            this.props.getPosts(this.props.user.id)
+            this.props.getUserScores()
+        }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
 
     logout = () => {
         this.props.drawerClickHandler()
         this.props.logout()
     }
     render() {
-        let { username } = this.props.user
+        let { username, image, level, score_streak } = this.props.user
+        let { currentLevel, scoreStreak } = this.props
         let drawerClasses = 'side-drawer'
         if (this.props.show) {
             drawerClasses = 'side-drawer open'
         }
+        console.log(score_streak)
+        console.log(scoreStreak)
+        console.log(currentLevel)
         return (
-            <nav className={drawerClasses}>
+            < nav className={drawerClasses} >
                 <header className='drawer-header'>
                     <h1 className='nav-header'>
                         <i className='icon far fa-check-square checkIcon' />
                         Better Everyday</h1>
                 </header>
                 <div className='account-image'>
-                    <img src='https://images.stubsites.com/webassets.ticketmob.com/LS/images/comedians/40FB835C-077B-196D-1E457C9F115E07AD.jpg' />
+                    <img src={image} />
                     <h3>{username}</h3>
-                    <h4>Level: 37</h4>
-                    <h4>Score Streak: 7</h4>
+                    <h4>Level: {currentLevel}</h4>
+                    <h4>Score Streak: {scoreStreak}</h4>
                 </div>
                 <div className='side-drawer-link-container'>
                     <div className='link-container'>
@@ -49,7 +75,7 @@ class SideDrawer extends Component {
                 {/* <ul>
                     <li>Account</li>
                 </ul> */}
-            </nav>
+            </nav >
         )
     }
 }
@@ -61,6 +87,6 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    { logout }
+    { logout, getUser, getUserScores }
 )(SideDrawer);
 

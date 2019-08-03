@@ -119,7 +119,7 @@ export class Step3 extends Component {
                             </div>
                             <div id='entry-of-day-preview'>
                                 <h3 id='entry-of-day-header-preview'><u>Additional Thoughts</u></h3>
-                                <div id='entry-of-day-text-preview' >
+                                <div id='entry-of-day-text-preview' style={{ height: '100%' }} >
                                     {parse(entry)}
                                     {/* {editing ? (<textarea wrap='soft' id='update-thought' defaultValue={list[i].thought} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this.handleEditingDone} />) : (
                                         <p>{entry}</p>
@@ -131,8 +131,10 @@ export class Step3 extends Component {
                 </section>
 
                 <div>
-                    <Link to='/' className='list-btn'>Previous</Link>
-                    <Link className='list-btn' to='/entries' onClick={() => this.addPost()}>Save Post</Link>
+                    <div>
+                        <Link to='/' className='list-btn'>Previous</Link>
+                        <Link className='list-btn' to='/entries' onClick={() => this.addPost()}>Save Post</Link>
+                    </div>
                 </div>
             </div >
         )

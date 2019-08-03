@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ADD_TASKS, ADD_ENTRY, ADD_IMAGE, ADD_DATE, GET_POSTS, SAVE_POST, EDIT_POST, DELETE_POST } from './actionTypes'
+import { ADD_TASKS, ADD_ENTRY, ADD_IMAGE, ADD_DATE, GET_POSTS, SAVE_POST, EDIT_POST, DELETE_POST, EDIT_IMAGE, EDIT_ENTRY } from './actionTypes'
 
 const initialState = {
     initialTasks: [],
@@ -14,7 +14,8 @@ const initialState = {
     task5: '',
     loading: false,
     error: false,
-    posts: []
+    posts: [],
+    totalPosts: null
 
 }
 
@@ -45,6 +46,25 @@ export function editPost(postId, newEntry, newImage, newTask1, newTask2, newTask
         type: EDIT_POST,
         payload: data
     };
+}
+
+export function editPostImage(postId, newImage) {
+    let data = axios
+        .put(`/api/editImage/${postId}`, { newImage })
+        .then(res => res.data)
+    return {
+        type: EDIT_IMAGE,
+        payload: data
+    }
+}
+export function editPostEntry(postId, newEntry) {
+    let data = axios
+        .put(`/api/editEntry/${postId}`, { newEntry })
+        .then(res => res.data)
+    return {
+        type: EDIT_ENTRY,
+        payload: data
+    }
 }
 
 export function savePost(task1, task2, task3, task4, task5, entry, date, imageOfDay) {
@@ -101,7 +121,6 @@ export default function (state = initialState, action) {
     // console.log('action:', action)
     switch (type) {
         case ADD_TASKS:
-            console.log(payload)
             return { ...state, completedTasks: payload, loading: false }
         case ADD_ENTRY:
             return { ...state, entry: payload }
@@ -126,9 +145,13 @@ export default function (state = initialState, action) {
             };
         case GET_POSTS + '_FULFILLED':
             console.log('get posts payload:', payload)
-            return { ...state, posts: payload, error: false };
+            return { ...state, posts: payload, totalPosts: payload.length, error: false };
         case GET_POSTS + '_REJECTED':
             return { ...state, error: payload };
+        case EDIT_IMAGE + '_FULFILLED':
+            return { ...state, posts: payload };
+        case EDIT_ENTRY + '_FULFILLED':
+            return { ...state, posts: payload }
         case EDIT_POST + '_FULFILLED':
             return { ...state, posts: payload };
         case DELETE_POST + '_FULFILLED':

@@ -17,7 +17,8 @@ app.use(express.json())
 app.use(session({
     secret: SESSION_SECRET,
     saveUninitialized: true,
-    resave: false
+    resave: false,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 }
 }))
 
 massive(CONNECTION_STRING).then(db => {
@@ -36,6 +37,8 @@ app.delete('/api/entries/:id', lc.deleteEntry)
 app.get('/api/posts/:userId', lc.getPosts)
 app.delete('/api/posts/:postId', lc.deletePost)
 app.put('/api/posts/edit/:postId', lc.editPost)
+app.put('/api/editImage/:postId', lc.editPostImage)
+app.put('/api/editEntry/:postId', lc.editPostEntry)
 app.post('/api/posts', lc.savePost)
 
 
@@ -44,6 +47,13 @@ app.post('/api/login', uc.login)
 app.post('/api/signup', uc.signup)
 app.get('/api/user', authCheck, uc.getUser)
 app.delete('/api/logout', uc.logout)
+
+//User Scores
+app.post('/api/userscores', uc.getScores)
+app.post('/api/levelup', uc.levelUp)
+app.post('/api/addstreak', uc.addToStreak)
+app.post('/api/removestreak', uc.removeStreak)
+
 
 // Quotes
 // app.get('/api/quotes', qc.grabQuotes)

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getUser } from '../redux/userReducer';
+import { getUser, getUserScores } from '../redux/userReducer';
 import { getPosts } from '../redux/entryReducer'
 import List from './List'
 import DateTime from './DateTime'
@@ -17,7 +17,9 @@ class Dashboard extends Component {
     }
     if (this.props.user.loggedIn) {
       this.props.getPosts(this.props.user.id)
+      this.props.getUserScores()
     }
+
   }
 
   render() {
@@ -42,5 +44,5 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { getUser, getPosts }
+  { getUser, getPosts, getUserScores }
 )(Dashboard);
