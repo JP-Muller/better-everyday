@@ -138,11 +138,17 @@ module.exports = {
 
     },
     async savePost(req, res) {
-        let { task1, task2, task3, task4, task5, entry, date, imageOfDay } = req.body
+        let { task1, task2, task3, task4, task5, entry, date, imageOfDay, mood } = req.body
         const db = req.app.get('db')
-        let posts = await db.add_post([task1, task2, task3, task4, task5, entry, date, imageOfDay, req.session.user.id])
+        let posts = await db.add_post([task1, task2, task3, task4, task5, entry, date, imageOfDay, mood, req.session.user.id])
         console.log('hit Save Post!!!...')
         res.send(posts)
+    },
+    async getAllPublic(req, res) {
+        const db = req.app.get('db')
+        let user = await db.get_all_public_posts()
+        console.log('GOT ALL PUBLIC POSTS');
+        res.send(user)
     }
 
 }

@@ -1,12 +1,14 @@
 import axios from 'axios';
-import { LOGIN, LOGOUT, SIGNUP, GET_USER, ADD_STREAK_SCORE, REMOVE_STREAK_SCORE, INCREASE_LEVEL, GET_SCORES } from './actionTypes';
+import { LOGIN, LOGOUT, SIGNUP, GET_USER, ADD_STREAK_SCORE, REMOVE_STREAK_SCORE, INCREASE_LEVEL, GET_SCORES, STREAK_BLOCK_ON, REMOVE_STREAK_BLOCK, ADMIN_GET_ALL, UPDATE_PROFILE_IMAGE } from './actionTypes';
 
 const initialState = {
     user: {},
     redirect: false,
     error: false,
     currentLevel: '',
-    scoreStreak: ''
+    scoreStreak: '',
+    streakAddedToday: false,
+    allPosts: {}
 
 };
 
@@ -38,9 +40,15 @@ export const signup = (firstName, lastName, email, username, password) => {
     };
 };
 
-export const addImage = (image) => {
+export const updateProfileImage = (newProfileImage) => {
     let data = axios
-        .put('/api/userimage')
+        .put('/api/userimage', { newProfileImage })
+        .then(res => res.data)
+        .catch(err => console.log(`Couldn't update profile pic`, err))
+    return {
+        type: UPDATE_PROFILE_IMAGE,
+        payload: data
+    }
 }
 
 export const levelUp = () => {
@@ -92,6 +100,30 @@ export const getUser = () => {
         payload: data
     };
 };
+export const streakBlockerOn = () => {
+    let data = axios.get('/api/streakblockeron').then(res => res.data)
+    console.log('Streak block on')
+    return {
+        type: STREAK_BLOCK_ON,
+        payload: data
+    }
+}
+export const removeStreakBlocker = () => {
+    let data = axios.post('/api/streakblockeroff').then(res => res.data)
+    console.log('Removed Streak block')
+    return {
+        type: REMOVE_STREAK_BLOCK,
+        payload: data
+    }
+}
+export const adminGetAllPosts = () => {
+    let data = axios.get('/api/admingetall').then(res => res.data)
+    console.log('allposts for admin:', data);
+    return {
+        type: ADMIN_GET_ALL,
+        payload: data
+    }
+}
 
 export default function (state = initialState, action) {
     let { type, payload } = action;
@@ -134,10 +166,15 @@ export default function (state = initialState, action) {
         case INCREASE_LEVEL + '_FULFILLED':
             return { ...state, currentLevel: payload[0].level, error: false }
         case ADD_STREAK_SCORE + '_FULFILLED':
-            return { ...state, scoreStreak: payload[0].score_streak, error: false }
+            return { ...state, scoreStreak: payload[0].score_streak, streakAddedToday: true, error: false }
         case REMOVE_STREAK_SCORE + '_FULFILLED':
             return { ...state, scoreStreak: payload[0].score_streak, error: false }
-
+        case REMOVE_STREAK_BLOCK + '_FULFILLED':
+            return { ...state, error: false }
+        case ADMIN_GET_ALL + '_FULFILLED':
+            return { ...state, allPosts: payload, error: false }
+        case UPDATE_PROFILE_IMAGE + '_FULFILLED':
+            return { ...state, user: payload, error: false }
         default:
             return state;
     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { saveTasks, getPosts, saveEntry, savePostDate, saveImageOfDay } from '../../redux/entryReducer'
-import { addToStreak, removeStreak, getUserScores, getUser } from '../../redux/userReducer'
+import { saveTasks, getPosts, saveEntry, savePostDate, saveImageOfDay, saveTodaysMood, removeMood, getAllPublicPosts } from '../../redux/entryReducer'
+import { addToStreak, removeStreak, getUserScores, getUser, removeStreakBlocker } from '../../redux/userReducer'
 import { connect } from 'react-redux'
 import firebase from 'firebase'
 import FileUploader from 'react-firebase-file-uploader'
@@ -26,69 +26,91 @@ export class Step1 extends Component {
             readyToUpload: false,
             selectedFile: null,
             postedToday: false,
+            viewPublicPosts: false,
             todaysPost: {},
-            scoreStreak: 0,
+            selectedMood: this.props.entry.mood,
             entry: this.props.entry.entry,
             date: this.props.entry.date,
-            completedCount: 0
+            completedCount: 0,
+            // publicPosts: 
 
         }
     }
 
     componentDidMount() {
-        let { user } = this.props.user
-        let { posts } = this.props.entry
-        console.log(posts)
-        posts.map((post, i) => {
-            let date = new Date().toDateString()
-            if (post.date_posted === date) {
-                this.setState({
-                    postedToday: true,
-                    todaysPost: post
-                }, () => {
-                    let { todaysPost, scoreStreak } = this.state
-                    let todaysDateSplit = todaysPost.date_posted.split(' ')
-                    for (let i = 0; i < posts.length; i++) {
-                        let postDateSplit = posts[i].date_posted.split(' ')
-                        if (todaysDateSplit[1] === postDateSplit[1] && +todaysDateSplit[2] === +postDateSplit[2] + 1) {
-                            this.props.addToStreak()
-                        } else if (todaysDateSplit[1] != postDateSplit[1] && +postDateSplit[2] === 31) {
-                            this.props.addToStreak()
-                        } else {
-                            this.props.removeStreak()
-
-                        }
-                    }
-                    // posts.map((post) => {
-                    //     let { todaysPost, scoreStreak } = this.state
-                    //     let todaysDateSplit = todaysPost.date_posted.split(' ')
-                    //     let postDateSplit = post.date_posted.split(' ')
-                    //     console.log(todaysDateSplit[1], postDateSplit[1]);
-                    //     console.log(todaysDateSplit[2], postDateSplit[2])
-                    //     if (todaysDateSplit[1] === postDateSplit[1] && +todaysDateSplit[2] === +postDateSplit[2] + 1) {
-                    //         this.props.addToStreak()
-                    //     } else if (todaysDateSplit[1] != postDateSplit[1] && +postDateSplit[2] === 31) {
-                    //         this.props.addToStreak()
-                    //     } else {
-                    //         (console.log('No'))
-                    //     }
-                    // })
-
-                })
-            } else this.setState({ postedToday: false })
-        })
-        // posts.map((post, i) => {
-        //     let scoreStreak = 0
-        //     let dateArray = post.date_posted.split(' ')
-        //     if 
-        // })
-
+        let { user, streakAddedToday, scoreStreak } = this.props.user
+        let { posts, } = this.props.entry
+        this.props.getAllPublicPosts()
+        if (user.loggedIn) {
+            this.checkIfPosted()
+            this.props.getUserScores()
+        }
         if (!user.loggedIn) {
             this.props.getUser();
             console.log('Got User!')
         }
         if (!posts.length && user.loggedIn) {
             this.props.getPosts(user.id)
+        }
+
+        // let { todaysPost } = this.state
+        // let date = new Date().toDateString()
+        // console.log('StreakAddedToday:', streakAddedToday);
+        // console.log('userstreakblock:', user.streak_block);
+
+        // console.log(posts)
+        // posts.map((post, i) => {
+        //     let date = new Date().toDateString()
+        //     if (post.date_posted === date) {
+        //         this.setState({
+        //             postedToday: true,
+        //             todaysPost: post
+        //         }, () => {
+        //             let { todaysPost, postedToday } = this.state
+        //             if (todaysPost &&  user.streak_block && !streakAddedToday) {
+        //                 this.props.removeStreakBlocker()
+        //                 console.log('Removed Streak Blocker');
+        //             }
+
+        //             let todaysDateSplit = todaysPost.date_posted.split(' ')
+        //             if (posts[posts.length - 2]) {
+        //                 let postBeforeToday = posts[posts.length - 2]
+        //                 let lastPostDate = postBeforeToday.date_posted.split(' ')
+        //                 console.log(postBeforeToday);
+        //                 if (!streakAddedToday && todaysDateSplit[1] === lastPostDate[1] && +todaysDateSplit[2] === +lastPostDate[2] + 1) {
+        //                     this.props.addToStreak()
+        //                     console.log('Added Streak');
+        //                 } else if (!streakAddedToday  && todaysDateSplit[1] != lastPostDate[1] && +lastPostDate[2] === 31) {
+        //                     this.props.addToStreak()
+        //                     console.log('Added Streak');
+        //                 } else if (!streakAddedToday && !user.streak_block && todaysDateSplit[1] === lastPostDate[1] && +todaysDateSplit[2] !== +lastPostDate[2] && +todaysDateSplit[2] !== +lastPostDate[2] + 1) {
+        //                     this.props.removeStreak()
+        //                     console.log('Removed Streak');
+        //                 } else if (streakAddedToday) {
+        //                     console.log(`Streak checked for today.`)
+        //                 } else { console.log('Streak Check Err'); }
+        //             } (console.log('No previous post to compare!'))
+
+        //         })
+        //     } else this.setState({ postedToday: false })
+        // })
+        // posts.map((post, i) => {
+        //     let scoreStreak = 0
+        //     let dateArray = post.date_posted.split(' ')
+        //     if 
+        // })
+    }
+
+    checkIfPosted = () => {
+        let { posts } = this.props.entry
+        let date = new Date().toDateString()
+        for (let i = 0; i < posts.length; i++) {
+            if (posts[i].date_posted === date) {
+                this.setState({
+                    postedToday: true,
+                    todaysPost: posts[i]
+                })
+            }
         }
     }
 
@@ -229,7 +251,10 @@ export class Step1 extends Component {
 
     saveImage = () => {
         let date = new Date().toDateString()
-        let { imageOfDay } = this.state
+        let { imageOfDay, selectedMood } = this.state
+        if (selectedMood.length > 0) {
+            this.props.saveTodaysMood(selectedMood)
+        }
         this.props.saveImageOfDay(imageOfDay)
         this.props.savePostDate(date)
     }
@@ -245,20 +270,175 @@ export class Step1 extends Component {
         this.props.saveEntry(entry)
         this.setState({ mode: 'imageQuestion' })
     }
+    setMoodAmused = () => {
+        if (this.state.selectedMood !== 'Amused') {
+            this.setState({
+                selectedMood: 'Amused'
+            }, () => { this.props.saveTodaysMood(this.state.selectedMood) })
+        } else {
+            this.setState({
+                selectedMood: ''
+            }, () => this.props.removeMood())
+
+        }
+    }
+    setMoodHappy = () => {
+        if (this.state.selectedMood !== 'Happy') {
+            this.setState({
+                selectedMood: 'Happy'
+            }, () => { this.props.saveTodaysMood(this.state.selectedMood) })
+        } else {
+            this.setState({
+                selectedMood: ''
+            }, () => this.props.removeMood())
+        }
+
+    }
+    setMoodContent = () => {
+        if (this.state.selectedMood !== 'Content') {
+            this.setState({
+                selectedMood: 'Content'
+            }, () => { this.props.saveTodaysMood(this.state.selectedMood) })
+        } else {
+            this.setState({
+                selectedMood: ''
+            }, () => this.props.removeMood())
+        }
+    }
+    setMoodUpset = () => {
+        if (this.state.selectedMood !== 'Upset') {
+            this.setState({
+                selectedMood: 'Upset'
+            }, () => { this.props.saveTodaysMood(this.state.selectedMood) })
+        } else {
+            this.setState({
+                selectedMood: ''
+            }, () => this.props.removeMood())
+        }
+    }
+    setMoodTired = () => {
+        if (this.state.selectedMood !== 'Tired') {
+            this.setState({
+                selectedMood: 'Tired'
+            }, () => { this.props.saveTodaysMood(this.state.selectedMood) })
+        } else {
+            this.setState({
+                selectedMood: ''
+            }, () => this.props.removeMood())
+        }
+    }
+    setMoodAngry = () => {
+        if (this.state.selectedMood !== 'Angry') {
+            this.setState({
+                selectedMood: 'Angry'
+            }, () => { this.props.saveTodaysMood(this.state.selectedMood) })
+        } else {
+            this.setState({
+                selectedMood: ''
+            }, () => this.props.removeMood())
+        }
+    }
+    moodChecker = (mood) => {
+        if (mood === 'Amused') {
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-laugh-squint" title='Amused' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Happy') {
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-grin" title='Happy' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Content') {
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-meh" title='Content' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Upset') {
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-frown" title='Upset' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Tired') {
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-tired" title='Tired' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Angry') {
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-angry" title='Angry' onClick={this.setMoodAmused} /></div></div>)
+        } else (console.log('No mood to display'))
+    }
+    togglePublicPosts = () => {
+        let { viewPublicPosts } = this.state
+        let { publicPosts } = this.props.entry
+        this.props.getAllPublicPosts()
+        console.log('actual public posts:', publicPosts)
+        this.setState({
+            viewPublicPosts: !viewPublicPosts
+        })
+    }
     render() {
-        let { initTasks, completedTasks, imageOfDay, mode, gifSearchToggled, urlBarToggled, readyToUpload, postedToday, todaysPost, completedCount } = this.state
-        let { posts } = this.props.entry
+
+        let { initTasks, completedTasks, imageOfDay, mode, gifSearchToggled, urlBarToggled, readyToUpload, postedToday, todaysPost, completedCount, selectedMood, viewPublicPosts } = this.state
+        let { user, scoreStreak, streakAddedToday } = this.props.user
+        let { posts, publicPosts } = this.props.entry
+
+        // this.props.getUserScores()
+        console.log(posts)
+
         if (postedToday) {
             return (
-                <div className='posted-style'>
-                    <header className='list-header'>
-                        <h1>Great job, {this.props.user.user.firstName}!</h1>
-                    </header>
-                    <section className='posted-message'><h2>Come back tomorrow to post again!</h2></section>
 
-                    <div className='posted-button-container'>
-                        <Link className='view-post-btn' onClick={this.saveEntry} to='/entries'>View my posts!</Link>
-                    </div>
+                <div className='posted-style'>
+                    {!viewPublicPosts ? (<div><header className='list-header'>
+                        <h1>Great job, {user.firstName}!</h1>
+                        {/* <h4>Score Streak: {scoreStreak}</h4> */}
+                    </header>
+                        <section className='posted-message'><h2>Come back tomorrow to post again!</h2></section>
+
+                        <div className='posted-button-container'>
+                            <Link className='view-post-btn' onClick={this.saveEntry} to='/entries'>View my posts!</Link>
+                            <button className='view-post-btn' onClick={this.togglePublicPosts}>View Public Posts</button>
+                        </div></div>) : (<div><div id='exit-posts-view'><i className="fas fa-home" onClick={this.togglePublicPosts} /></div><div className='public-posts-master' style={{ height: '100%', width: '100%' }}>{this.props.entry.publicPosts && this.props.entry.publicPosts.length ? publicPosts.map(post => {
+                            return (
+
+                                <div style={{ margin: '0px 10px 0px 10px', padding: '20px' }} className='public-entry-preview' key={pubPost}>
+                                    <div id='public-entry-date'>
+                                        <div>{post.date_posted}</div>
+                                        <div className='img-username-div'>
+                                            <div><img src={post.profile_image} /></div>
+                                            <div>{post.username}</div>
+                                        </div>
+                                    </div>
+                                    <div className='public-post-container'>
+                                        <div className='image-tasks-container' >
+                                            <section id='public-image-of-day'>
+                                                <section style={{ height: '90%' }}>
+                                                    {/* <header className='post-titles-header'><h4><i><b>Image of the Day </b></i></h4></header> */}
+                                                    <img src={post.image} alt='Preview Imagery' style={{ transform: 'scale(1.05)' }} />
+                                                    {post.mood && post.mood.length > 0 ? (this.moodChecker(post.mood)) : null}
+                                                </section>
+                                            </section>
+                                            <div id='completed-task-preview' style={{marginTop: '20px'}}>
+                                                <header id='completed-tasks-header'>
+                                                    <i className='icon far fa-check-square checkIcon' /><h5> Completed Tasks </h5>  <i className='icon far fa-check-square checkIcon' />
+                                                </header>
+
+                                                {post.task_1 ? (<div className='public-task-item'> {post.task_1}</div>) : null}
+                                                {post.task_2 ? (<div className='public-task-item'>{post.task_2}</div>) : null}
+                                                {post.task_3 ? (<div className='public-task-item'> {post.task_3}</div>) : null}
+                                                {post.task_4 ? (<div className='public-task-item'> {post.task_4}</div>) : null}
+                                                {post.task_5 ? (<div className='public-task-item'> {post.task_5}</div>) : null}
+                                                {/* {completedTasks.map((taskItem, i) =>
+                                                    <div className='task-container'
+                                                        key={i}>
+
+                                                        {taskItem ? <div className='preview-task-item' >{taskItem}</div> : null}
+
+                                                    </div>)} */}
+
+                                            </div>
+                                        </div>
+                                        <div id='entry-of-day-preview'>
+                                            <header className='post-titles-header'><h3 id='entry-of-day-header-preview'><u>Additional Thoughts</u> </h3></header>
+                                            <div id='public-entry-of-day-text-preview' >
+                                                <div>{parse(post.entry)}</div>
+                                                {/* <div className='edit-entry-quill-container'>
+                                                    <ReactQuill value={post.entry} onKeyPress={this.flipEntryEdit} />
+                                                </div> */}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            )
+                        }) : null}</div></div>)}
+
                 </div >
             )
         } else if (mode === 'taskList') {
@@ -325,13 +505,12 @@ export class Step1 extends Component {
                 <div className='imageStep-style'>
                     <div>
                         <header className='list-header image-header'>
-                            <h1>Upload photo of the day</h1>
+                            <h1>Pick a photo of the day</h1>
                         </header>
                         <div className='wrapper' id='list-header'>
                             <div className='upload-img-preview'>
                                 <div className='image-method-container'>
                                     <div className='gif-icon'>
-                                        {/* <img src='https://i.imgur.com/0VNKgfp.jpg' onClick={this.handleGifSearchToggle} /> */}
                                         <button onClick={this.handleGifSearchToggle} title='Search GIFs'>GIF</button>
                                     </div>
                                     <div className='url-icon'>
@@ -345,7 +524,6 @@ export class Step1 extends Component {
                                             storageRef={firebase.storage().ref('entryImages')}
                                             onUploadSuccess={this.fileUploadHandler} />
                                         </label>
-
                                         <i className="fas fa-upload" onClick={() => this.fileInput.click()} title='Upload' />
                                     </div>
                                 </div>
@@ -356,7 +534,18 @@ export class Step1 extends Component {
                                     <input type='text' placeholder='Image URL' onChange={(e) => this.handleImageUrl(e.target.value)} /></section>) : null}
                                 <section className='image-of-day-container'>
                                     <img src={imageOfDay} alt='Preview Imagery' />
+                                    {!urlBarToggled && !gifSearchToggled ? (<p> Pick a mood</p>) : null}
+                                    <div className='mood-picker-container'>
+                                        {selectedMood === 'Amused' ? (<div className='mood-icon '><i className="far fa-laugh-squint selected" title='Amused' onClick={this.setMoodAmused} /></div>) : (<div className='mood-icon'><i className="far fa-laugh-squint" title='Amused' onClick={this.setMoodAmused} /></div>)}
+                                        {selectedMood === 'Happy' ? (<div className='mood-icon '><i className="far fa-grin-alt selected" title='Happy' onClick={this.setMoodHappy} /></div>) : (<div className='mood-icon'><i className="far fa-grin-alt" title='Happy' onClick={this.setMoodHappy} /></div>)}
+                                        {selectedMood === 'Content' ? (<div className='mood-icon '><i className="far fa-meh selected" title='Content' onClick={this.setMoodContent} /></div>) : (<div className='mood-icon'><i className="far fa-meh" title='Content' onClick={this.setMoodContent} /></div>)}
+                                        {selectedMood === 'Upset' ? (<div className='mood-icon '><i className="far fa-frown selected" title='Upset' onClick={this.setMoodUpset} /></div>) : (<div className='mood-icon'><i className="far fa-frown" title='Upset' onClick={this.setMoodUpset} /></div>)}
+                                        {selectedMood === 'Tired' ? (<div className='mood-icon '><i className="far fa-tired selected" title='Tired' onClick={this.setMoodTired} /></div>) : (<div className='mood-icon'><i className="far fa-tired" title='Tired' onClick={this.setMoodTired} /></div>)}
+                                        {selectedMood === 'Angry' ? (<div className='mood-icon'><i className="far fa-angry selected" title='Angry' onClick={this.setMoodAngry} /></div>) : (<div className='mood-icon'><i className="far fa-angry" title='Angry' onClick={this.setMoodAngry} /></div>)}
+                                    </div>
+
                                 </section>
+
                             </div>
                         </div >
 
@@ -388,5 +577,5 @@ function mapStateToProps(state) {
 }
 export default connect(
     mapStateToProps,
-    { saveTasks, getPosts, saveEntry, savePostDate, saveImageOfDay, addToStreak, removeStreak, getUser, getUserScores }
+    { saveTasks, getPosts, saveEntry, savePostDate, saveImageOfDay, saveTodaysMood, removeMood, addToStreak, removeStreak, getUser, getUserScores, removeStreakBlocker, getAllPublicPosts }
 )(Step1);

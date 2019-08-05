@@ -58,6 +58,8 @@ class Weather extends Component {
         } else if (weatherDescription === 'broken clouds') {
             console.log('Broken Clouds Today!')
             return <i className="fas fa-cloud" title='Broken Clouds' />
+        } else if (weatherDescription === 'overcast clouds') {
+            return <i className='fas fa-cloud' title='Overcast Clouds' />
         } else if (weatherDescription === 'shower rain') {
             console.log('Shower Rain Today!')
             return <i className="fas fa-cloud-showers-heavy" title='Shower Rain' />

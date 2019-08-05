@@ -47,7 +47,7 @@ export class DateTime extends Component {
         } else if (currentHr < 18) {
             return <div id='hour-greeting'><i className="far fa-sun" /> Good afternoon, {user.firstName}!</div>
         } else {
-            return <div id='hour-greeting'><i class="far fa-moon" /> Good evening, {user.firstName}!</div>
+            return <div id='hour-greeting'><i className="far fa-moon" /> Good evening, {user.firstName}!</div>
         }
     }
 

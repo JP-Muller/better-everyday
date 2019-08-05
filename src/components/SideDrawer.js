@@ -39,9 +39,6 @@ class SideDrawer extends Component {
         if (this.props.show) {
             drawerClasses = 'side-drawer open'
         }
-        console.log(score_streak)
-        console.log(scoreStreak)
-        console.log(currentLevel)
         return (
             < nav className={drawerClasses} >
                 <header className='drawer-header'>
@@ -57,16 +54,16 @@ class SideDrawer extends Component {
                 </div>
                 <div className='side-drawer-link-container'>
                     <div className='link-container'>
-                        <Link to='/' className='nav-link'>Home</Link>
+                        <Link to='/' className='nav-link' onClick={this.props.drawerClickHandler}>Home</Link>
                     </div>
                     <div className='link-container'>
-                        <Link to='/entries' className='nav-link'>Entries</Link>
+                        <Link to='/entries' className='nav-link' onClick={this.props.drawerClickHandler}>Entries</Link>
                     </div>
                     <div className='link-container'>
-                        <Link to='/account' className='nav-link'>Account</Link>
+                        <Link to='/account' className='nav-link' onClick={this.props.drawerClickHandler}>Account</Link>
                     </div>
                     <div className='link-container'>
-                        <Link to='/about' className='nav-link'>About</Link>
+                        <Link to='/about' className='nav-link' onClick={this.props.drawerClickHandler}>About</Link>
                     </div>
                     <button className="warning-btn" onClick={this.logout} >
                         <i className="fas fa-sign-out-alt"></i>

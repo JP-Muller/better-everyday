@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux'
-import { getUser, levelUp } from '../redux/userReducer'
+import { getUser, levelUp, getUserScores } from '../redux/userReducer'
 import { getPosts, editPost, editPostImage, editPostEntry, deletePost } from '../redux/entryReducer'
 import firebase from 'firebase'
 import FileUploader from 'react-firebase-file-uploader'
+import { toast } from 'react-toastify';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Tenor from 'react-tenor'
@@ -39,36 +40,53 @@ class Entries extends Component {
     componentDidMount() {
         let { user } = this.props.user
         let { posts } = this.props.entry
+        this.setState({
+            i: posts.length - 1
+        })
         if (!user.loggedIn) {
             this.props.getUser();
             console.log('Got User!')
         }
+        this.props.getUserScores()
         if (user.xp >= 100 && +user.level === 0) {
             this.props.levelUp()
+            toast(`DING! You're now level 1!`)
         } else if (user.xp >= 200 && +user.level === 1) {
             this.props.levelUp()
+            toast(`DING! You're now level 2!`)
         } else if (user.xp >= 300 && +user.level === 2) {
             this.props.levelUp()
+            toast(`DING! You're now level 3!`)
         } else if (user.xp >= 400 && +user.level === 3) {
             this.props.levelUp()
+            toast(`DING! You're now level 4!`)
         } else if (user.xp >= 500 && user.level === 4) {
             this.props.levelUp()
+            toast(`DING! You're now level 5!`)
         } else if (user.xp >= 600 && user.level === 5) {
             this.props.levelUp()
+            toast(`DING! You're now level 6!`)
         } else if (user.xp >= 700 && user.level === 6) {
             this.props.levelUp()
+            toast(`DING! You're now level 7!`)
         } else if (user.xp >= 800 && user.level === 7) {
             this.props.levelUp()
+            toast(`DING! You're now level 8!`)
         } else if (user.xp >= 900 && user.level === 8) {
             this.props.levelUp()
+            toast(`DING! You're now level 9!`)
         } else if (user.xp >= 1000 && user.level === 9) {
             this.props.levelUp()
+            toast(`DING! You're now level 10!`)
         } else if (user.xp >= 1100 && user.level === 10) {
             this.props.levelUp()
+            toast(`DING! You're now level 11!`)
         } else if (user.xp >= 1200 && user.level === 11) {
             this.props.levelUp()
+            toast(`DING! You're now level 12`)
         } else if (user.xp >= 1300 && user.level === 12) {
             this.props.levelUp()
+            toast(`DING! You're now level 13!`)
         } else { (console.log('Player Maxed')) }
         if (!posts.length && user.loggedIn) {
             this.props.getPosts()
@@ -204,23 +222,23 @@ class Entries extends Component {
         }
         this.setState({ urlBarToggled: !urlBarToggled })
     }
-    // handleEditingDone = e => {
-    //     let { listId, currThought } = this.state
-    //     let id = listId
-    //     let thought = currThought
-    //     if (e.keyCode === 13) {
-    //         console.log('Finished editing')
-    //         this.setState({ editing: !this.state.editing })
-    //         axios
-    //             .put(`/api/entries/${id}?newThought=${thought}`)
-    //             .then(res => {
-    //                 console.log(res.data)
-    //                 this.setState({ list: res.data })
-    //             })
-    //             .catch(err => console.log(`Couldn't update..`, err))
-    //     }
-    // }
-
+    moodChecker = (i) => {
+        let { posts } = this.props.entry
+        let mood = posts[i].mood
+        if (mood === 'Amused') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-laugh-squint" title='Amused' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Happy') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-grin" title='Happy' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Content') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-meh" title='Content' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Upset') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-frown" title='Upset' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Tired') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-tired" title='Tired' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Angry') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-angry" title='Angry' onClick={this.setMoodAmused} /></div></div>)
+        } else (console.log('No mood to display'))
+    }
     saveChanges = () => {
         let { i, newEntry, newImage, newTask1, newTask2, newTask3, newTask4, newTask5 } = this.state
         let { posts } = this.props.entry
@@ -285,7 +303,7 @@ class Entries extends Component {
                                     <section id='image-of-day'>
                                         <div className='wrapper' id='list-header'>
                                             <div className='entry-upload-img-preview'>
-                                                <div className='image-method-container'>
+                                                <div className='entry-image-method-container'>
 
                                                     <div className='gif-icon'>
                                                         <button onClick={this.handleGifSearchToggle}>GIF</button>
@@ -349,12 +367,13 @@ class Entries extends Component {
                             <div id='entry-preview'>
                                 <div id='entry-date'>
                                     {posts[i].date_posted}
+                                    <div><i className="fas fa-globe" style={{ fontSize: '20px' }} /></div>
                                     <div> {+i + 1}/{posts.length}</div>
                                 </div>
                                 <div className='post-container'>
                                     <div className='image-tasks-container'>
                                         <section id='image-of-day'>
-                                            {!editingImage ? (<header className='post-titles-header'><h3><i><b>Image of the Day </b></i><i className="fas fa-edit" onClick={this.flipImageEdit} /></h3></header>) : null}
+                                            {/* {!editingImage ? (<header className='post-titles-header'><h3><i><b>Image of the Day </b></i><i className="fas fa-edit" onClick={this.flipImageEdit} /></h3></header>) : null} */}
                                             {editingImage ? (
                                                 <div className='wrapper' id='list-header'>
                                                     <div className='entry-upload-img-preview'>
@@ -394,9 +413,11 @@ class Entries extends Component {
                                                         </section>
                                                     </div>
                                                 </div >
-                                            ) : (<section>
-
-                                                <img src={posts[i].image} alt='Preview Imagery' /></section>)}
+                                            ) : (<section style={{ height: '90%' }}>
+                                                <header className='post-titles-header'><h3><i><b>Image of the Day </b></i><i className="fas fa-edit" onClick={this.flipImageEdit} /></h3></header>
+                                                <img src={posts[i].image} alt='Preview Imagery' style={{ transform: 'scale(1.05)' }} />
+                                                {posts[i].mood && posts[i].mood.length > 0 ? (this.moodChecker(i)) : <div style={{ height: '27px' }}></div>}
+                                            </section>)}
                                         </section>
                                         <div id='completed-task-preview'>
                                             <header id='completed-tasks-header'>
@@ -482,5 +503,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    { getUser, getPosts, editPost, editPostImage, editPostEntry, deletePost, levelUp }
+    { getUser, getPosts, editPost, editPostImage, editPostEntry, deletePost, levelUp, getUserScores }
 )(Entries);

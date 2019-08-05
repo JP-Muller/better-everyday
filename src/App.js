@@ -6,9 +6,15 @@ import Inspire from './components/Inspire'
 import Weather from './components/Weather'
 import SideDrawer from './components/SideDrawer'
 import Backdrop from './components/Backdrop'
+import { toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
+import { css } from 'glamor';
 import firebase from 'firebase'
 import config from './config/firebaseConfig'
 
+toast.configure({
+  autoClose: 5000,
+})
 firebase.initializeApp(config)
 
 class App extends Component {
@@ -34,12 +40,12 @@ class App extends Component {
         <Navbar drawerClickHandler={this.drawerClickHandler} />
         <SideDrawer show={this.state.sideDrawerOpen} drawerClickHandler={this.drawerClickHandler} />
         {backdrop}
-        {/* <Weather /> */}
         {routes}
         <footer> <Inspire /></footer >
       </div >
     );
   }
 }
+
 
 export default App;

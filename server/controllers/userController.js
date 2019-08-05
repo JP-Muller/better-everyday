@@ -19,7 +19,8 @@ module.exports = {
         xp: existingUser.xp,
         level: existingUser.level,
         score_streak: existingUser.score_streak,
-        image: existingUser.image
+        image: existingUser.image,
+        streak_block: existingUser.streak_block
       };
       res.send(req.session.user);
     } else res.status(401).send('Username or password incorrect');
@@ -36,9 +37,14 @@ module.exports = {
       username: user.username,
       id: user.id,
       firstName: user.first_name,
-      lastName: existingUser.last_name,
-      email: existingUser.email,
-      loggedIn: true
+      lastName: user.last_name,
+      email: user.email,
+      loggedIn: true,
+      xp: user.xp,
+      level: user.level,
+      score_streak: user.score_streak,
+      image: user.image,
+      streak_block: user.streak_block
     };
     console.log('req.session.user', req.session.user)
     res.send(req.session.user);
@@ -50,6 +56,12 @@ module.exports = {
   getUser(req, res) {
     res.send(req.session.user);
   },
+  async updateProfileImage(req, res) {
+    let { newProfileImage } = req.body
+    const db = req.app.get('db')
+    let user = await db.update_profile_image([newProfileImage, req.session.user.id])
+    res.send(user)
+  },
   async levelUp(req, res) {
     const db = req.app.get('db')
     let user = await db.level_up(req.session.user.id)
@@ -59,6 +71,7 @@ module.exports = {
   async addToStreak(req, res) {
     const db = req.app.get('db')
     let user = await db.add_to_streak(req.session.user.id)
+      .catch(err => console.log('error', err))
     console.log(user)
     res.send(user)
   },
@@ -67,9 +80,26 @@ module.exports = {
     let user = await db.remove_streak(req.session.user.id)
     res.send(user)
   },
+  async streakBlockerOn(req, res) {
+    const db = req.app.get('db')
+    let user = await db.streak_block_on(req.session.user.id)
+    res.send(user)
+  },
+  async streakBlockerOff(req, res) {
+    const db = req.app.get('db')
+    let user = await db.streak_block_off(req.session.user.id)
+      .catch(err => console.log('error', err))
+    console.log(user);
+    res.send(user)
+  },
   async getScores(req, res) {
     const db = req.app.get('db')
     let user = await db.get_user_scores(req.session.user.id)
+    res.send(user)
+  },
+  async adminGetAllPosts(req, res) {
+    const db = req.app.get('db')
+    let user = await db.admin_get_all()
     res.send(user)
   }
 };

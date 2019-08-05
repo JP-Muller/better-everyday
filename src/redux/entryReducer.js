@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ADD_TASKS, ADD_ENTRY, ADD_IMAGE, ADD_DATE, GET_POSTS, SAVE_POST, EDIT_POST, DELETE_POST, EDIT_IMAGE, EDIT_ENTRY } from './actionTypes'
+import { ADD_TASKS, ADD_ENTRY, ADD_IMAGE, ADD_DATE, ADD_MOOD, REMOVE_MOOD, GET_POSTS, SAVE_POST, EDIT_POST, DELETE_POST, EDIT_IMAGE, EDIT_ENTRY, POST_VIEW_TOGGLE, CHANGE_POST_PRIVATE, CHANGE_POST_PUBLIC, GET_PUBLIC_POSTS } from './actionTypes'
 
 const initialState = {
     initialTasks: [],
@@ -12,10 +12,13 @@ const initialState = {
     task3: '',
     task4: '',
     task5: '',
+    mood: '',
     loading: false,
     error: false,
     posts: [],
-    totalPosts: null
+    totalPosts: null,
+    postViewToggled: false,
+    publicPosts: {}
 
 }
 
@@ -67,12 +70,37 @@ export function editPostEntry(postId, newEntry) {
     }
 }
 
-export function savePost(task1, task2, task3, task4, task5, entry, date, imageOfDay) {
-    let data = axios.post(`/api/posts`, { task1, task2, task3, task4, task5, entry, date, imageOfDay }).then(res => res.data);
+export function savePost(task1, task2, task3, task4, task5, entry, date, imageOfDay, mood) {
+    let data = axios.post(`/api/posts`, { task1, task2, task3, task4, task5, entry, date, imageOfDay, mood }).then(res => res.data);
     return {
         type: SAVE_POST,
         payload: data
     };
+}
+export function togglePostView() {
+    return {
+        type: POST_VIEW_TOGGLE
+    }
+}
+export const getAllPublicPosts = () => {
+    let data = axios.get('/api/getallpublic').then(res => res.data)
+    console.log('all public posts:', data)
+    return {
+        type: GET_PUBLIC_POSTS,
+        payload: data
+    }
+}
+
+
+export function makePostPrivate() {
+    return {
+        type: CHANGE_POST_PRIVATE
+    }
+}
+export function makePostPublic() {
+    return {
+        type: CHANGE_POST_PUBLIC
+    }
 }
 
 
@@ -112,6 +140,23 @@ export const savePostDate = (str) => {
     }
 }
 
+export const saveTodaysMood = (selectedMood) => {
+    let data = selectedMood
+    console.log('SELECTED MOOD:', selectedMood);
+
+    return {
+        type: ADD_MOOD,
+        payload: data
+    }
+}
+
+export const removeMood = () => {
+    console.log('Mood Deselected');
+    return {
+        type: REMOVE_MOOD
+    }
+}
+
 export const wipeState = () => {
 
 }
@@ -128,6 +173,13 @@ export default function (state = initialState, action) {
             return { ...state, imageOfDay: payload, loading: false }
         case ADD_DATE:
             return { ...state, date: payload, loading: false }
+        case ADD_MOOD:
+            return { ...state, mood: payload, loading: false }
+        case REMOVE_MOOD:
+            return { ...state, mood: '', loading: false }
+        case POST_VIEW_TOGGLE:
+            let { postViewToggled } = initialState
+            return { ...state, postViewToggled: !postViewToggled, loading: false }
         case SAVE_POST + '_FULFILLED':
             console.log('save posts payload:', payload)
             return {
@@ -142,10 +194,13 @@ export default function (state = initialState, action) {
                 task3: '',
                 task4: '',
                 task5: '',
+                mood: ''
             };
         case GET_POSTS + '_FULFILLED':
             console.log('get posts payload:', payload)
             return { ...state, posts: payload, totalPosts: payload.length, error: false };
+        case GET_PUBLIC_POSTS + '_FULFILLED':
+            return { ...state, publicPosts: payload, error: false }
         case GET_POSTS + '_REJECTED':
             return { ...state, error: payload };
         case EDIT_IMAGE + '_FULFILLED':

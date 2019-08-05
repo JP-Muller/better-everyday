@@ -3,6 +3,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getUser } from '../../redux/userReducer';
 import { savePost, getPosts } from '../../redux/entryReducer'
+import ReactQuill from 'react-quill'
 import DateTime from '../DateTime'
 import Weather from '../Weather'
 import axios from 'axios'
@@ -37,6 +38,23 @@ export class Step3 extends Component {
         }
     }
 
+    moodChecker = () => {
+        let { mood } = this.props.entry
+        if (mood === 'Amused') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-laugh-squint" title='Amused' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Happy') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}><div className='mood-icon'><i className="far fa-grin" title='Happy' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Content') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-meh" title='Content' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Upset') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-frown" title='Upset' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Tired') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-tired" title='Tired' onClick={this.setMoodAmused} /></div></div>)
+        } else if (mood === 'Angry') {
+            return (<div className='entries-mood-container' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-angry" title='Angry' onClick={this.setMoodAmused} /></div></div>)
+        } else (console.log('No mood to display'))
+    }
+
     addEntry = () => {
         let { date, completedTasks, entry, imageOfDay } = this.props.entry
         axios.post('api/entries', {
@@ -61,23 +79,23 @@ export class Step3 extends Component {
 
     addPost = () => {
         let { noTask, entry, date, imageOfDay } = this.state;
-        let { completedTasks } = this.props.entry
+        let { completedTasks, mood } = this.props.entry
         if (completedTasks.length === 1) {
-            this.props.savePost(completedTasks[0].title, noTask, noTask, noTask, noTask, entry, imageOfDay, date)
+            this.props.savePost(completedTasks[0].title, noTask, noTask, noTask, noTask, entry, imageOfDay, date, mood)
         } else if (completedTasks.length === 2) {
-            this.props.savePost(completedTasks[0].title, completedTasks[1].title, noTask, noTask, noTask, entry, imageOfDay, date)
+            this.props.savePost(completedTasks[0].title, completedTasks[1].title, noTask, noTask, noTask, entry, imageOfDay, date, mood)
         } else if (completedTasks.length === 3) {
-            this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, noTask, noTask, entry, imageOfDay, date)
+            this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, noTask, noTask, entry, imageOfDay, date, mood)
         } else if (completedTasks.length === 4) {
-            this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, completedTasks[3].title, noTask, entry, imageOfDay, date)
+            this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, completedTasks[3].title, noTask, entry, imageOfDay, date, mood)
         } else if (completedTasks.length === 5) {
-            this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, completedTasks[3].title, completedTasks[4].title, entry, imageOfDay, date);
+            this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, completedTasks[3].title, completedTasks[4].title, entry, imageOfDay, date, mood);
         } else { console.log(`Can't add post..`); }
     };
 
     render() {
         let { user, error, redirect } = this.props.user;
-        let { entry, date, imageOfDay, completedTasks } = this.props.entry
+        let { entry, date, imageOfDay, completedTasks, mood } = this.props.entry
         if (error || redirect) return <Redirect to="/login" />;
         if (!user.loggedIn) return <div>Loading</div>;
         return (
@@ -95,6 +113,7 @@ export class Step3 extends Component {
                                 <section id='image-of-day'>
                                     <h3><i><b>Image of the Day</b></i></h3>
                                     <img src={imageOfDay} alt='Preview Imagery' />
+                                    {mood && mood.length > 0 ? (this.moodChecker()) : null}
                                 </section>
                                 <div id='completed-task-preview'>
                                     <header id='completed-tasks-header'>
@@ -107,20 +126,15 @@ export class Step3 extends Component {
                                                 {taskItem.title}
                                             </div>
                                         </div>)}
-                                    {/* <ul id='completed-task-list-preview' key='targetTask'>
-                                        <div><li> {completedTasks[0].title} </li></div>
-                                        <div><li> {completedTasks[1].title} </li></div>
-                                        <div><li> {completedTasks[2].title} </li></div>
-                                        <div><li> {completedTasks[3].title} </li></div>
-                                        <div><li> {completedTasks[4].title} </li></div>
-                                     
-                                    </ul> */}
                                 </div>
                             </div>
                             <div id='entry-of-day-preview'>
                                 <h3 id='entry-of-day-header-preview'><u>Additional Thoughts</u></h3>
                                 <div id='entry-of-day-text-preview' style={{ height: '100%' }} >
-                                    {parse(entry)}
+                                    {/* {parse(entry)} */}
+                                    <div className='edit-entry-quill-container'>
+                                        <ReactQuill value={entry} onKeyPress={this.flipEntryEdit} />
+                                    </div>
                                     {/* {editing ? (<textarea wrap='soft' id='update-thought' defaultValue={list[i].thought} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this.handleEditingDone} />) : (
                                         <p>{entry}</p>
                                     )} */}
