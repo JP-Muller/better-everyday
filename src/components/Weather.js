@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 require('dotenv').config()
-const { IP_INFO_KEY, WEATHER_APP_KEY } = process.env
+const { REACT_APP_IP_INFO_KEY, REACT_APP_WEATHER_APP_KEY } = process.env
 
 class Weather extends Component {
     constructor() {
@@ -19,7 +19,7 @@ class Weather extends Component {
 
     componentDidMount() {
         axios
-            .get(`https://ipinfo.io/geo/?token=887c9af7d7eb7f`).then(res => {
+            .get(`https://ipinfo.io/geo/?token=${REACT_APP_IP_INFO_KEY}`).then(res => {
                 this.setState({ location: res.data }, () => this.getLocalWeather())
             })
             .catch(err => {
@@ -31,7 +31,7 @@ class Weather extends Component {
     getLocalWeather = () => {
         const { location } = this.state
         axios
-            .get(`https://api.openweathermap.org/data/2.5/weather?q=${location.city}&appid=fa848ce77bcbd574273133d9bac59d2f`).then(res => {
+            .get(`https://api.openweathermap.org/data/2.5/weather?q=${location.city}&appid=${REACT_APP_WEATHER_APP_KEY}`).then(res => {
                 this.setState({ weatherData: res.data }, () => {
                     const { weatherData } = this.state
                     this.setState({ weatherDescription: weatherData.weather[0].description })
