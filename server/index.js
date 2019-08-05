@@ -10,6 +10,7 @@ const lc = require('./controllers/listController')
 const qc = require('./controllers/quoteController')
 const initSession = require('./middleware/initSession');
 const authCheck = require('./middleware/authCheck');
+const path = require('path')
 const { SERVER_PORT, SESSION_SECRET, CONNECTION_STRING } = process.env
 
 const app = express()
@@ -111,8 +112,10 @@ app.put('/api/userimage', uc.updateProfileImage)
 // app.get('/api/location', lc.grabLocation)
 //Weather
 
+app.use(express.static(__dirname + '/../build'))
 
-//Fun Facts
-
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../build/index.html'))
+})
 
 app.listen(SERVER_PORT, () => console.log(`Listening on port ${SERVER_PORT}`))

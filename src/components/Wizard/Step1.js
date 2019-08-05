@@ -47,6 +47,8 @@ export class Step1 extends Component {
         }
         if (!user.loggedIn) {
             this.props.getUser();
+            this.checkIfPosted()
+
             console.log('Got User!')
         }
         if (!posts.length && user.loggedIn) {
@@ -366,6 +368,9 @@ export class Step1 extends Component {
 
         let { initTasks, completedTasks, imageOfDay, mode, gifSearchToggled, urlBarToggled, readyToUpload, postedToday, todaysPost, completedCount, selectedMood, viewPublicPosts } = this.state
         let { user, scoreStreak, streakAddedToday } = this.props.user
+        if (!user.loggedIn) {
+            this.setState({ postedToday: false })
+        }
         let { posts, publicPosts } = this.props.entry
 
         // this.props.getUserScores()
@@ -384,10 +389,10 @@ export class Step1 extends Component {
                         <div className='posted-button-container'>
                             <Link className='view-post-btn' onClick={this.saveEntry} to='/entries'>View my posts!</Link>
                             <button className='view-post-btn' onClick={this.togglePublicPosts}>View Public Posts</button>
-                        </div></div>) : (<div><div id='exit-posts-view'><i className="fas fa-home" onClick={this.togglePublicPosts} /></div><div className='public-posts-master' style={{ height: '100%', width: '100%' }}>{this.props.entry.publicPosts && this.props.entry.publicPosts.length ? publicPosts.map(post => {
+                        </div></div>) : (<div><div id='exit-posts-view'><i className="fas fa-home" onClick={this.togglePublicPosts} /></div><div className='public-posts-master' style={{ height: '100%', width: '100%' }}>{this.props.entry.publicPosts && this.props.entry.publicPosts.length ? publicPosts.map((post, i) => {
                             return (
 
-                                <div style={{ margin: '0px 10px 0px 10px', padding: '20px' }} className='public-entry-preview' key={pubPost}>
+                                <div style={{ margin: '0px 10px 0px 10px', padding: '20px' }} className='public-entry-preview' key={i}>
                                     <div id='public-entry-date'>
                                         <div>{post.date_posted}</div>
                                         <div className='img-username-div'>
@@ -399,12 +404,12 @@ export class Step1 extends Component {
                                         <div className='image-tasks-container' >
                                             <section id='public-image-of-day'>
                                                 <section style={{ height: '90%' }}>
-                                                    {/* <header className='post-titles-header'><h4><i><b>Image of the Day </b></i></h4></header> */}
+                                                    <header className='post-titles-header'><h4><i><b>Image of the Day </b></i></h4></header>
                                                     <img src={post.image} alt='Preview Imagery' style={{ transform: 'scale(1.05)' }} />
                                                     {post.mood && post.mood.length > 0 ? (this.moodChecker(post.mood)) : null}
                                                 </section>
                                             </section>
-                                            <div id='completed-task-preview' style={{marginTop: '20px'}}>
+                                            <div id='completed-task-preview' style={{ marginTop: '20px' }}>
                                                 <header id='completed-tasks-header'>
                                                     <i className='icon far fa-check-square checkIcon' /><h5> Completed Tasks </h5>  <i className='icon far fa-check-square checkIcon' />
                                                 </header>
@@ -528,7 +533,7 @@ export class Step1 extends Component {
                                     </div>
                                 </div>
                                 {gifSearchToggled ? (<section className='tenor-search'>
-                                    <Tenor token="" onSelect={result => this.setState({ imageOfDay: result.media[0].gif.url })} />
+                                    <Tenor token="BH9EX9JC7WAE" onSelect={result => this.setState({ imageOfDay: result.media[0].gif.url })} />
                                 </section>) : null}
                                 {urlBarToggled ? (<section className='url-search'>
                                     <input type='text' placeholder='Image URL' onChange={(e) => this.handleImageUrl(e.target.value)} /></section>) : null}

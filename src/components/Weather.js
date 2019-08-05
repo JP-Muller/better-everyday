@@ -19,7 +19,7 @@ class Weather extends Component {
 
     componentDidMount() {
         axios
-            .get(``).then(res => {
+            .get(`https://ipinfo.io/geo/?token=887c9af7d7eb7f`).then(res => {
                 this.setState({ location: res.data }, () => this.getLocalWeather())
             })
             .catch(err => {
@@ -31,7 +31,7 @@ class Weather extends Component {
     getLocalWeather = () => {
         const { location } = this.state
         axios
-            .get(``).then(res => {
+            .get(`https://api.openweathermap.org/data/2.5/weather?q=${location.city}&appid=fa848ce77bcbd574273133d9bac59d2f`).then(res => {
                 this.setState({ weatherData: res.data }, () => {
                     const { weatherData } = this.state
                     this.setState({ weatherDescription: weatherData.weather[0].description })
@@ -86,6 +86,8 @@ class Weather extends Component {
         } else if (weatherDescription === 'haze') {
             console.log('Hazy')
             return <i className="fas fa-smog" title='Hazy' />
+        } else if (weatherDescription === 'smoke') {
+            return <i className="fas fa-smog" />
         } else {
             return <i className="far fa-sad-tear" title='Unknown' />
         }

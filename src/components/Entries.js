@@ -323,7 +323,7 @@ class Entries extends Component {
                                                     </div>
                                                 </div>
                                                 {gifSearchToggled ? (<section className='tenor-search'>
-                                                    <Tenor token="" onSelect={result => this.setState({ newImage: result.media[0].gif.url })} />
+                                                    <Tenor token="BH9EX9JC7WAE" onSelect={result => this.setState({ newImage: result.media[0].gif.url })} />
                                                 </section>) : null}
                                                 {/* <p>Image URL: </p> */}
                                                 {urlBarToggled ? (<section className='url-search'>
@@ -367,7 +367,7 @@ class Entries extends Component {
                             <div id='entry-preview'>
                                 <div id='entry-date'>
                                     {posts[i].date_posted}
-                                    <div><i className="fas fa-globe" style={{ fontSize: '20px' }} /></div>
+                                    <div><i className="fas fa-globe" style={{ fontSize: '20px', cursor: 'pointer' }} /></div>
                                     <div> {+i + 1}/{posts.length}</div>
                                 </div>
                                 <div className='post-container'>
@@ -403,7 +403,7 @@ class Entries extends Component {
                                                             </div>
                                                         </div>
                                                         {gifSearchToggled ? (<section className='tenor-search'>
-                                                            <Tenor token="" onSelect={result => this.setState({ newImage: result.media[0].gif.url })} />
+                                                            <Tenor token="BH9EX9JC7WAE" onSelect={result => this.setState({ newImage: result.media[0].gif.url })} />
                                                         </section>) : null}
                                                         {/* <p>Image URL: </p> */}
                                                         {urlBarToggled ? (<section className='url-search'>
@@ -480,9 +480,8 @@ class Entries extends Component {
             this.props.getPosts(user.id)
         }
         let { i } = this.state
-        console.log(user)
-        console.log('posts:', posts)
-        console.log({ i })
+        // console.log(user)
+        // console.log({ i })
 
         return (
 
