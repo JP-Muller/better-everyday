@@ -146,9 +146,21 @@ module.exports = {
     },
     async getAllPublic(req, res) {
         const db = req.app.get('db')
-        let user = await db.get_all_public_posts()
+        let posts = await db.get_all_public_posts()
         console.log('GOT ALL PUBLIC POSTS');
-        res.send(user)
+        res.send(posts)
+    },
+    async setPublic(req,res){
+        let {postId} = req.params
+        const db = req.app.get('db')
+        let posts = await db.set_post_public([postId, req.session.user.id])
+        res.send(posts)
+    },
+    async setPrivate(req,res){
+        let {postId} = req.params
+        const db = req.app.get('db')
+        let posts = await db.set_post_private([postId, req.session.user.id])
+        res.send(posts)
     }
 
 }

@@ -96,12 +96,9 @@ class Weather extends Component {
 
 
     render() {
-        const { weatherData, location, date } = this.state
+        const { weatherData, location } = this.state
         let temperature = 'Loading...'
         if (weatherData.main.temp) temperature = ((9 / 5) * (weatherData.main.temp - 273.15) + 32).toFixed(0)
-        console.log(weatherData.main)
-        console.log(weatherData)
-        console.log(location)
         return (
             <div className='weather-time-container'>
                 <section className='weather-widget'>

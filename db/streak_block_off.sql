@@ -1,3 +1,3 @@
 UPDATE users
-SET streak_block = 'f'
+SET streak_block = false
 WHERE id = $1;

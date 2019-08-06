@@ -14,6 +14,6 @@ SELECT
     FROM 
     entries
     INNER JOIN users ON users.id = entries.user_id
-    WHERE public = false
+    WHERE public = true
 
     ORDER BY entries.id DESC;

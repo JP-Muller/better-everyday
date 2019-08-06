@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { logout, getUser, getUserScores } from '../redux/userReducer';
+import {clearPostState} from '../redux/entryReducer'
 import { Link } from 'react-router-dom'
 
 
@@ -29,12 +30,16 @@ class SideDrawer extends Component {
     }
 
     logout = () => {
+        this.props.clearPostState()
         this.props.drawerClickHandler()
         this.props.logout()
     }
     render() {
-        let { username, image, level, score_streak } = this.props.user
-        let { currentLevel, scoreStreak } = this.props
+        console.log('this.props', this.props)
+        let { username, image} = this.props.user.user
+        let { currentLevel, scoreStreak } = this.props.user
+        console.log('scoreStreak', scoreStreak)
+
         let drawerClasses = 'side-drawer'
         if (this.props.show) {
             drawerClasses = 'side-drawer open'
@@ -49,8 +54,8 @@ class SideDrawer extends Component {
                 <div className='account-image'>
                     <img src={image} />
                     <h3>{username}</h3>
-                    <h4>Level: {currentLevel}</h4>
-                    <h4>Score Streak: {scoreStreak}</h4>
+                    <h4 style={{marginTop: '15px'}}>Level: {currentLevel}</h4>
+                    {/* <h4>Score Streak: {scoreStreak}</h4> */}
                 </div>
                 <div className='side-drawer-link-container'>
                     <div className='link-container'>
@@ -79,11 +84,14 @@ class SideDrawer extends Component {
 
 
 function mapStateToProps(state) {
-    return state.user;
+    return {
+        user: state.user,
+        entry: state.entry
+    }
 }
 
 export default connect(
     mapStateToProps,
-    { logout, getUser, getUserScores }
+    { logout, getUser, getUserScores, clearPostState }
 )(SideDrawer);
 

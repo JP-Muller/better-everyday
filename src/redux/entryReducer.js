@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ADD_TASKS, ADD_ENTRY, ADD_IMAGE, ADD_DATE, ADD_MOOD, REMOVE_MOOD, GET_POSTS, SAVE_POST, EDIT_POST, DELETE_POST, EDIT_IMAGE, EDIT_ENTRY, POST_VIEW_TOGGLE, CHANGE_POST_PRIVATE, CHANGE_POST_PUBLIC, GET_PUBLIC_POSTS } from './actionTypes'
+import { ADD_TASKS, ADD_ENTRY, ADD_IMAGE, ADD_DATE, ADD_MOOD, REMOVE_MOOD, GET_POSTS, SAVE_POST, EDIT_POST, DELETE_POST, EDIT_IMAGE, EDIT_ENTRY, POST_VIEW_TOGGLE, CHANGE_POST_PRIVATE, CHANGE_POST_PUBLIC, GET_PUBLIC_POSTS, CLEAR_STATE } from './actionTypes'
 
 const initialState = {
     initialTasks: [],
@@ -18,7 +18,7 @@ const initialState = {
     posts: [],
     totalPosts: null,
     postViewToggled: false,
-    publicPosts: {}
+    publicPosts: {},
 
 }
 
@@ -90,18 +90,29 @@ export const getAllPublicPosts = () => {
         payload: data
     }
 }
-
-
-export function makePostPrivate() {
+export const clearPostState = () => {
     return {
-        type: CHANGE_POST_PRIVATE
+        type: CLEAR_STATE
     }
 }
-export function makePostPublic() {
+
+export function setPostPrivate(postId) {
+    let data = axios.put(`/api/setprivate/${postId}`).then(res => res.data)
+    console.log('SET POST PRIVATE')
     return {
-        type: CHANGE_POST_PUBLIC
+        type: CHANGE_POST_PRIVATE,
+        payload: data
     }
 }
+export function setPostPublic(postId) {
+    let data = axios.put(`/api/setpublic/${postId}`).then(res => res.data)
+    console.log('SET POST PUBLIC')
+    return {
+        type: CHANGE_POST_PUBLIC,
+        payload: data
+    }
+}
+
 
 
 
@@ -180,6 +191,7 @@ export default function (state = initialState, action) {
         case POST_VIEW_TOGGLE:
             let { postViewToggled } = initialState
             return { ...state, postViewToggled: !postViewToggled, loading: false }
+
         case SAVE_POST + '_FULFILLED':
             console.log('save posts payload:', payload)
             return {
@@ -212,6 +224,12 @@ export default function (state = initialState, action) {
         case DELETE_POST + '_FULFILLED':
             console.log('delete payload:', payload)
             return { ...state, posts: payload };
+        case CHANGE_POST_PUBLIC + '_FULFILLED':
+            return { ...state, posts: payload }
+        case CHANGE_POST_PRIVATE + '_FULFILLED':
+            return { ...state, posts: payload }
+        case CLEAR_STATE:
+            return { ...state, posts: [], totalPosts: '', postViewToggled: false }
         default:
             return state
     }

@@ -16,6 +16,7 @@ class Dashboard extends Component {
       console.log('Got User!')
     }
     if (this.props.user.loggedIn) {
+      this.props.getUser()
       this.props.getPosts(this.props.user.id)
       this.props.getUserScores()
     }

@@ -20,7 +20,10 @@ module.exports = {
         level: existingUser.level,
         score_streak: existingUser.score_streak,
         image: existingUser.image,
-        streak_block: existingUser.streak_block
+        streak_block: existingUser.streak_block,
+        posted_today: existingUser.posted_today,
+        last_date_posted: existingUser.last_date_posted,
+        highest_streak: existingUser.highest_streak
       };
       res.send(req.session.user);
     } else res.status(401).send('Username or password incorrect');
@@ -44,7 +47,10 @@ module.exports = {
       level: user.level,
       score_streak: user.score_streak,
       image: user.image,
-      streak_block: user.streak_block
+      streak_block: user.streak_block,
+      posted_today: user.posted_today,
+      last_date_posted: user.last_date_posted,
+      highest_streak: user.highest_streak
     };
     console.log('req.session.user', req.session.user)
     res.send(req.session.user);
@@ -69,10 +75,10 @@ module.exports = {
     res.send(user)
   },
   async addToStreak(req, res) {
+    let {date} = req.body
     const db = req.app.get('db')
-    let user = await db.add_to_streak(req.session.user.id)
-      .catch(err => console.log('error', err))
-    console.log(user)
+    let user = await db.add_to_streak([req.session.user.id, date])
+      .catch(err => console.log('addToStreak Error UC', err))
     res.send(user)
   },
   async removeStreak(req, res) {
@@ -85,11 +91,30 @@ module.exports = {
     let user = await db.streak_block_on(req.session.user.id)
     res.send(user)
   },
+  async switchPostedOff(req, res) {
+    const db = req.app.get('db')
+    let data = await db.posted_today_off(req.session.user.id)
+    console.log('POSTED TODAY OFF')
+    res.send(data)
+  },
+  async switchPostedOn(req, res) {
+    const db = req.app.get('db')
+    let data = await db.posted_today_on(req.session.user.id)
+    console.log('POSTED TODAY ON')
+    res.send(data)
+  },
   async streakBlockerOff(req, res) {
     const db = req.app.get('db')
     let user = await db.streak_block_off(req.session.user.id)
       .catch(err => console.log('error', err))
     console.log(user);
+    res.send(user)
+  },
+  async changeActivity(req, res) {
+    let { today } = req.body
+    const db = req.app.get('db')
+    let user = await db.change_activity([req.session.user.id, today])
+      .catch(err => console.log('error', err))
     res.send(user)
   },
   async getScores(req, res) {

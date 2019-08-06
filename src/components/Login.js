@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { login } from '../redux/userReducer.js';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link} from 'react-router-dom';
 
 class Login extends Component {
     constructor() {
@@ -18,6 +18,7 @@ class Login extends Component {
 
     loginUser = () => {
         this.props.login(this.state.username, this.state.password);
+        
     };
 
     render() {
@@ -49,11 +50,13 @@ class Login extends Component {
                         />
                     </div>
                     <br />
+                   
                     <span className='btn-container'>
                         <button onClick={this.loginUser} className="normal-btn">
                             Login
           </button>
                     </span>
+                    <div style={{color: '#fff', fontSize: '15px', marginTop: '10px'}}>Not a member? <Link style={{color: 'lightblue'}} to='/signup'><u>Sign up</u></Link></div>
                 </div>
                 <div />
             </div>

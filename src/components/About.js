@@ -34,11 +34,12 @@ class About extends Component {
         const form = await axios.post('/api/form', { name, email, message })
             .then(
                 this.contactFlip(),
-                this.setState({
-                    name: '',
-                    email: '',
-                    message: '',
-                }, () => { toast(`Message sent! Thank you!`) }))
+                console.log(form),
+        this.setState({
+            name: '',
+            email: '',
+            message: '',
+        }, () => { toast(`Message sent! Thank you!`) }))
     }
     render() {
         let { contactUs } = this.state
@@ -53,14 +54,14 @@ class About extends Component {
                     </section>
                     <button className='view-post-btn' onClick={this.contactFlip}>CONTACT US</button>
                 </div>) : (<div className='about-details-container'>
-                    <h1 style={{marginBottom: '15px'}}>Send us a message!</h1>
+                    <h1 style={{ marginBottom: '15px' }}>Send us a message!</h1>
                     <section className='about-container'>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '25px' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', marginTop: '15px' }}><h3>Name:</h3> <input type='text' className='about-input-row' name='name' onChange={this.handleChange} value={this.state.name} /></div>
                             <div style={{ display: 'flex', flexDirection: 'column', marginTop: '15px' }}><h3>Email:</h3> <input type='text' className='about-input-row' name='email' onChange={this.handleChange} value={this.state.email} /></div>
                         </div>
                         <h3>Message:</h3>
-                        <div style={{width: '100%'}} ><textarea className='about-input-thoughts' name='message' onChange={this.handleChange} value={this.state.message} /></div>
+                        <div style={{ width: '100%' }} ><textarea className='about-input-thoughts' name='message' onChange={this.handleChange} value={this.state.message} /></div>
                     </section>
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'spaceEvenly', alignItems: 'center', width: '50%', marginTop: '20px' }}>

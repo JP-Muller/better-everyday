@@ -46,6 +46,11 @@ app.put('/api/editImage/:postId', lc.editPostImage)
 app.put('/api/editEntry/:postId', lc.editPostEntry)
 app.post('/api/posts', lc.savePost)
 app.get('/api/getallpublic', lc.getAllPublic)
+app.put('/api/setpublic/:postId', lc.setPublic)
+app.put('/api/setprivate/:postId', lc.setPrivate)
+app.post('/api/postedtodayon', uc.switchPostedOn)
+app.post('/api/postedtodayoff', uc.switchPostedOff)
+app.post('/api/changeactivity', uc.changeActivity)
 
 //nodemailer
 app.post('/api/form', (req, res) => {

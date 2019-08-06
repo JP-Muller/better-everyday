@@ -83,10 +83,10 @@ export class Account extends Component {
     };
     render() {
 
-        let { user, error, redirect, scoreStreak, currentLevel, allPosts } = this.props.user
+        let { user, error, redirect, scoreStreak, currentLevel, allPosts, highestStreak } = this.props.user
         let { totalPosts } = this.props.entry
         let { adminView, editPic, urlBarToggled, newProfileImage } = this.state
-        let { firstName, lastName, username, email, level, xp, score_streak, image } = user
+        let { firstName, lastName, username, email, xp } = user
         if (user.image && newProfileImage === '') { newProfileImage = user.image }
         if (error || redirect) return <Redirect to="/login" />;
         if (!user.loggedIn) return <div className='account-info-container'><div>Please log back in to view profile changes.</div><div><Login /></div></div>;
@@ -141,7 +141,8 @@ export class Account extends Component {
                                 <h2><u>User Stats</u></h2>
                                 <div className='stat-container'><h3>Level: </h3> <h2>  {currentLevel}</h2></div>
                                 <div className='stat-container'><h3>Total XP: </h3> <h2>  {xp}</h2></div>
-                                <div className='stat-container'><h3>Current Post Streak: </h3><h2>  {scoreStreak}</h2></div>
+                                {/* <div className='stat-container'><h3>Current Streak: </h3><h2>  {scoreStreak}</h2></div>
+                                <div className='stat-container'><h3>Highest Streak: </h3><h2>  {highestStreak}</h2></div> */}
                                 <div className='stat-container'><h3>Total Posts:</h3><h2>  {totalPosts}</h2></div>
                             </section>
                         </div>
@@ -151,7 +152,7 @@ export class Account extends Component {
                                 return (
 
                                     <div style={{ margin: '10px 2px 10px 2px', padding: '20px' }} className='private-entry-preview'>
-                                        <div id='public-entry-date' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', height: '50px', background: 'rgba(192, 192, 192, 0.1)'}}>
+                                        <div id='public-entry-date' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', height: '50px', background: 'rgba(192, 192, 192, 0.1)' }}>
                                             <div>{post.date_posted}</div>
                                             <div>Post ID: {post.id}</div>
                                             <div>Username: {post.username}</div>
@@ -194,60 +195,6 @@ export class Account extends Component {
                             })}</div></div>) : null}
                         </div>
                     </div>)}
-
-
-
-                    {/* Profile Picture:
-                    <div className='account-input-row'>
-                        <input
-                            type="text"
-                            name="newProfileImage"
-                            onChange={this.handleChange}
-                            className="input"
-                        />
-                    </div>
-                    First Name:
-                    <div className='account-input-row'>
-                        <input
-                            type="text"
-                            defaultValue={firstName}
-                            name="newFirstName"
-                            onChange={this.handleChange}
-                            className="input"
-                        />
-                    </div>
-                    Last Name:
-                    <div className='account-input-row'>
-
-                        <input
-                            type="text"
-                            defaultValue={lastName}
-                            name="newLastName"
-                            onChange={this.handleChange}
-                            className="input"
-                        />
-                    </div>
-                    Username:
-                    <div className='account-input-row'>
-                        <input
-                            type="text"
-                            defaultValue={username}
-                            name="newUsername"
-                            onChange={this.handleChange}
-                            className="input"
-                        />
-                    </div>
-                    Email:
-                    <div className='account-input-row'>
-
-                        <input
-                            type="text"
-                            value={email}
-                            name="newEmail"
-                            onChange={this.handleChange}
-                            className="input"
-                        />
-                    </div> */}
                 </div>
                 {adminView ? (<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '35vh', marginTop: '10px' }}><div className='acc-detail-admin' onClick={this.flipAdminView}><h3>Go Back</h3></div></div>) : null}
             </div>

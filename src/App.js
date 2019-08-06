@@ -6,7 +6,7 @@ import Inspire from './components/Inspire'
 import Weather from './components/Weather'
 import SideDrawer from './components/SideDrawer'
 import Backdrop from './components/Backdrop'
-import { toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { css } from 'glamor';
 import firebase from 'firebase'
@@ -22,6 +22,74 @@ class App extends Component {
     super()
     this.state = {
       sideDrawerOpen: false,
+    }
+  }
+  componentDidMount = () => {
+    let date = new Date().toDateString().split(' ')
+    let bodyStyle = document.getElementsByTagName('body')
+    if (date && date[0] === 'Sun') {
+      for (let i = 0, max = bodyStyle.length; i < max; i++) {
+        if (i = 1) {
+          bodyStyle[0].style.background = "url(https://images.unsplash.com/photo-1554110397-9bac083977c6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80) no-repeat center fixed"
+        }
+        if (i = 2) {
+          bodyStyle[0].style.backgroundSize = 'cover'
+        }
+      }
+    } else if (date && date[0] === 'Mon') {
+      for (let i = 0, max = bodyStyle.length; i < max; i++) {
+        if (i = 1) {
+          bodyStyle[0].style.background = "url(https://images.unsplash.com/photo-1477346611705-65d1883cee1e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80) no-repeat center fixed"
+        }
+        if (i = 2) {
+          bodyStyle[0].style.backgroundSize = 'cover'
+        }
+      }
+    } else if (date && date[0] === 'Tue') {
+      for (let i = 0, max = bodyStyle.length; i < max; i++) {
+        if (i = 1) {
+          bodyStyle[0].style.background = "url(https://images.unsplash.com/photo-1563342294-4b43e108bb22?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80) no-repeat center fixed"
+        }
+        if (i = 2) {
+          bodyStyle[0].style.backgroundSize = 'cover'
+        }
+      }
+    } else if (date && date[0] === 'Wed') {
+      for (let i = 0, max = bodyStyle.length; i < max; i++) {
+        if (i = 1) {
+          bodyStyle[0].style.background = "url(https://images.unsplash.com/photo-1564198659768-f5b37e6419ee?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80) no-repeat center fixed"
+        }
+        if (i = 2) {
+          bodyStyle[0].style.backgroundSize = 'cover'
+        }
+      }
+    } else if (date && date[0] === 'Thu') {
+      for (let i = 0, max = bodyStyle.length; i < max; i++) {
+        if (i = 1) {
+          bodyStyle[0].style.background = "url(https://images.unsplash.com/photo-1464983953574-0892a716854b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80) no-repeat center fixed"
+        }
+        if (i = 2) {
+          bodyStyle[0].style.backgroundSize = 'cover'
+        }
+      }
+    } else if (date && date[0] === 'Fri') {
+      for (let i = 0, max = bodyStyle.length; i < max; i++) {
+        if (i = 1) {
+          bodyStyle[0].style.background = "url(https://images.unsplash.com/flagged/photo-1562592534-61621f33383e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80) no-repeat center fixed"
+        }
+        if (i = 2) {
+          bodyStyle[0].style.backgroundSize = 'cover'
+        }
+      }
+    } else if (date && date[0] === 'Sat') {
+      for (let i = 0, max = bodyStyle.length; i < max; i++) {
+        if (i = 1) {
+          bodyStyle[0].style.background = "url(https://images.unsplash.com/photo-1557626204-59dd03fd2d31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80) no-repeat center fixed"
+        }
+        if (i = 2) {
+          bodyStyle[0].style.backgroundSize = 'cover'
+        }
+      }
     }
   }
   drawerClickHandler = () => {

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { getUser, levelUp, getUserScores } from '../redux/userReducer'
-import { getPosts, editPost, editPostImage, editPostEntry, deletePost } from '../redux/entryReducer'
+import { getPosts, editPost, editPostImage, editPostEntry, deletePost, setPostPublic, setPostPrivate } from '../redux/entryReducer'
 import firebase from 'firebase'
 import FileUploader from 'react-firebase-file-uploader'
 import { toast } from 'react-toastify';
@@ -38,7 +38,7 @@ class Entries extends Component {
     }
 
     componentDidMount() {
-        let { user } = this.props.user
+        let { user, currentLevel, currentXp} = this.props.user
         let { posts } = this.props.entry
         this.setState({
             i: posts.length - 1
@@ -48,43 +48,43 @@ class Entries extends Component {
             console.log('Got User!')
         }
         this.props.getUserScores()
-        if (user.xp >= 100 && +user.level === 0) {
+        if (+currentXp >= 105 && +currentLevel === 0) {
             this.props.levelUp()
             toast(`DING! You're now level 1!`)
-        } else if (user.xp >= 200 && +user.level === 1) {
+        } else if (+currentXp >= 200 && +currentLevel === 1) {
             this.props.levelUp()
             toast(`DING! You're now level 2!`)
-        } else if (user.xp >= 300 && +user.level === 2) {
+        } else if (currentXp >= 300 && +currentLevel === 2) {
             this.props.levelUp()
             toast(`DING! You're now level 3!`)
-        } else if (user.xp >= 400 && +user.level === 3) {
+        } else if (+currentXp >= 400 && +currentLevel === 3) {
             this.props.levelUp()
             toast(`DING! You're now level 4!`)
-        } else if (user.xp >= 500 && user.level === 4) {
+        } else if (+currentXp >= 500 && +currentLevel === 4) {
             this.props.levelUp()
             toast(`DING! You're now level 5!`)
-        } else if (user.xp >= 600 && user.level === 5) {
+        } else if (+currentXp >= 600 && +currentLevel === 5) {
             this.props.levelUp()
             toast(`DING! You're now level 6!`)
-        } else if (user.xp >= 700 && user.level === 6) {
+        } else if (+currentXp >= 700 && +currentLevel === 6) {
             this.props.levelUp()
             toast(`DING! You're now level 7!`)
-        } else if (user.xp >= 800 && user.level === 7) {
+        } else if (+currentXp >= 800 && +currentLevel === 7) {
             this.props.levelUp()
             toast(`DING! You're now level 8!`)
-        } else if (user.xp >= 900 && user.level === 8) {
+        } else if (+currentXp >= 900 && +currentLevel === 8) {
             this.props.levelUp()
             toast(`DING! You're now level 9!`)
-        } else if (user.xp >= 1000 && user.level === 9) {
+        } else if (+currentXp >= 1000 && +currentLevel === 9) {
             this.props.levelUp()
             toast(`DING! You're now level 10!`)
-        } else if (user.xp >= 1100 && user.level === 10) {
+        } else if (+currentXp >= 1100 && +currentLevel === 10) {
             this.props.levelUp()
             toast(`DING! You're now level 11!`)
-        } else if (user.xp >= 1200 && user.level === 11) {
+        } else if (+currentXp >= 1200 && +currentLevel === 11) {
             this.props.levelUp()
             toast(`DING! You're now level 12`)
-        } else if (user.xp >= 1300 && user.level === 12) {
+        } else if (+currentXp >= 1300 && +currentLevel === 12) {
             this.props.levelUp()
             toast(`DING! You're now level 13!`)
         } else { (console.log('Player Maxed')) }
@@ -93,16 +93,24 @@ class Entries extends Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
-        let { title, content } = prevProps;
-        if (title !== this.props.title || content !== this.props.content) {
-            this.setState({
-                newTitle: title,
-                newContent: content,
-                editing: false
-            });
-        }
-    }
+    // componentDidUpdate(prevProps) {
+    //     let {i} = this.state
+    //     let { entry, image, task_1, task_2, task_3, task_4, task_5 } = prevProps
+    //     if (entry !== this.props.entry.posts[i].entry || image !== this.props.entry.posts[i].image || task_1 !== this.props.entry.posts[i].task_1 || task_2 !== this.props.entry.posts[i].task_2 || task_3 !== this.props.entry.posts[i].task_3 || task_4 !== this.props.entry.posts[i].task_4 || task_5 !== this.props.entry.posts[i].task_5 ) {
+    //         this.setState({
+    //             newEntry: entry,
+    //             newImage: image,
+    //             newTask1: task_1,
+    //             newTask2: task_2,
+    //             newTask3: task_3,
+    //             newTask4: task_4,
+    //             newTask5: task_5,
+    //         });
+    //     }
+    // }
+
+    //newEntry, newImage, newTask1, newTask2, newTask3, newTask4, newTask5
+
     handleKeyNext = e => {
         let { posts } = this.props.entry
         console.log('right arrow')
@@ -243,8 +251,41 @@ class Entries extends Component {
         let { i, newEntry, newImage, newTask1, newTask2, newTask3, newTask4, newTask5 } = this.state
         let { posts } = this.props.entry
         let postId = posts[i].id
+        if (newEntry === '' || newEntry === ' ' || newEntry === '   ') {
+            this.setState({ newEntry: posts[i].entry })
+        }
+        if (newImage === '' || newImage === ' ' || newImage === '   ') {
+            this.setState({ newImage: posts[i].image })
+        }
+        if (newTask1 === '' || newTask1 === ' ' || newTask1 === '   ') {
+            this.setState({ newTask1: posts[i].task_1 })
+        }
+        if (newTask2 === '' || newTask2 === ' ' || newTask2 === '   ') {
+            this.setState({ newTask2: posts[i].task_2 })
+        }
+        if (newTask3 === '' || newTask3 === ' ' || newTask3 === '   ') {
+            this.setState({ newTask3: posts[i].task_3 })
+        }
+        if (newTask4 === '' || newTask4 === ' ' || newTask4 === '   ') {
+            this.setState({ newTask4: posts[i].task_4 })
+        }
+        if (newTask5 === '' || newTask5 === ' ' || newTask5 === '   ') {
+            this.setState({ newTask5: posts[i].task_5 })
+        }
         this.props.editPost(postId, newEntry, newImage, newTask1, newTask2, newTask3, newTask4, newTask5)
         this.setState({ editing: !this.state.editing })
+    }
+    makePostPublic = () => {
+        let { i } = this.state
+        let { posts } = this.props.entry
+        let postId = posts[i].id
+        this.props.setPostPublic(postId)
+    }
+    makePostPrivate = () => {
+        let { i } = this.state
+        let { posts } = this.props.entry
+        let postId = posts[i].id
+        this.props.setPostPrivate(postId)
     }
 
     saveEntryChanges = () => {
@@ -367,7 +408,8 @@ class Entries extends Component {
                             <div id='entry-preview'>
                                 <div id='entry-date'>
                                     {posts[i].date_posted}
-                                    <div><i className="fas fa-globe" style={{ fontSize: '20px', cursor: 'pointer' }} /></div>
+                                    {!posts[i].public ? (<div><i className="fas fa-globe" title='Post is private!' style={{ fontSize: '20px', cursor: 'pointer' }} onClick={this.makePostPublic} /></div>) : <div><i className="fas fa-globe selected" title='Post is public!' style={{ fontSize: '20px', cursor: 'pointer' }} onClick={this.makePostPrivate} /></div>}
+
                                     <div> {+i + 1}/{posts.length}</div>
                                 </div>
                                 <div className='post-container'>
@@ -415,7 +457,7 @@ class Entries extends Component {
                                                 </div >
                                             ) : (<section style={{ height: '90%' }}>
                                                 <header className='post-titles-header'><h3><i><b>Image of the Day </b></i><i className="fas fa-edit" onClick={this.flipImageEdit} /></h3></header>
-                                                <img src={posts[i].image} alt='Preview Imagery' style={{ transform: 'scale(1.05)' }} />
+                                                <img src={posts[i].image} alt='Preview Imagery' style={{ transform: 'scale(1.1)' }} />
                                                 {posts[i].mood && posts[i].mood.length > 0 ? (this.moodChecker(i)) : <div style={{ height: '27px' }}></div>}
                                             </section>)}
                                         </section>
@@ -502,5 +544,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    { getUser, getPosts, editPost, editPostImage, editPostEntry, deletePost, levelUp, getUserScores }
+    { getUser, getPosts, editPost, editPostImage, editPostEntry, deletePost, levelUp, getUserScores, setPostPublic, setPostPrivate }
 )(Entries);
