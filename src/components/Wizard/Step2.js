@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { getUser } from '../../redux/userReducer';
 import { savePost, getPosts } from '../../redux/entryReducer'
 import { postedTodayOn, changeActivity } from '../../redux/userReducer'
+import { toast } from 'react-toastify'
+import { css } from 'glamor'
 import ReactQuill from 'react-quill'
 import axios from 'axios'
 const parse = require('html-react-parser')
@@ -36,6 +38,14 @@ export class Step2 extends Component {
             console.log('Got User!')
         }
     }
+
+    notifyPostSuccess = () => toast('Post successful!', {
+        className: css({
+            background: "rgba(0,0,0,0.6) !important"
+        }),
+        position: toast.POSITION.BOTTOM_RIGHT,
+        toastClassName: "dark-toast"
+    })
 
     moodChecker = () => {
         let { mood } = this.props.entry
@@ -80,27 +90,31 @@ export class Step2 extends Component {
         let { noTask, entry, date, imageOfDay } = this.state;
         let { completedTasks, mood } = this.props.entry
         let today = new Date().toDateString()
-        console.log('THIS IS WHATS BEING PASSED INTO CHANGE ACTIVITY')
         if (completedTasks.length === 1) {
             this.props.savePost(completedTasks[0].title, noTask, noTask, noTask, noTask, entry, imageOfDay, date, mood)
             this.props.postedTodayOn()
             this.props.changeActivity(today)
+            this.notifyPostSuccess()
         } else if (completedTasks.length === 2) {
             this.props.savePost(completedTasks[0].title, completedTasks[1].title, noTask, noTask, noTask, entry, imageOfDay, date, mood)
             this.props.postedTodayOn()
             this.props.changeActivity(today)
+            this.notifyPostSuccess()
         } else if (completedTasks.length === 3) {
             this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, noTask, noTask, entry, imageOfDay, date, mood)
             this.props.postedTodayOn()
             this.props.changeActivity(today)
+            this.notifyPostSuccess()
         } else if (completedTasks.length === 4) {
             this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, completedTasks[3].title, noTask, entry, imageOfDay, date, mood)
             this.props.postedTodayOn()
             this.props.changeActivity(today)
+            this.notifyPostSuccess()
         } else if (completedTasks.length === 5) {
             this.props.savePost(completedTasks[0].title, completedTasks[1].title, completedTasks[2].title, completedTasks[3].title, completedTasks[4].title, entry, imageOfDay, date, mood)
             this.props.postedTodayOn()
             this.props.changeActivity(today)
+            this.notifyPostSuccess()
         } else { console.log(`Can't add post..`); }
     };
 
@@ -157,7 +171,7 @@ export class Step2 extends Component {
 
                 <div>
                     <div>
-                        <Link to='/' className='list-btn'>Previous</Link>
+                        <Link to='/' className='list-btn' style={{ marginRight: '20px' }}>Previous</Link>
                         <Link className='list-btn' to='/entries' onClick={() => this.addPost()}>Save Post</Link>
                     </div>
                 </div>

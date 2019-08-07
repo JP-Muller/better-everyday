@@ -8,11 +8,13 @@ export class DateTime extends Component {
         this.state = {
             date: '',
             militaryTime: false,
-            greetingFlip: false
+            greetingFlip: false,
+            mantra: ''
         }
     }
     componentDidMount() {
         this.getDate()
+        this.mantraPicker()
     }
 
     getDate = () => {
@@ -50,9 +52,42 @@ export class DateTime extends Component {
             return <div id='hour-greeting'><i className="far fa-moon" /> Good evening, {user.firstName}!</div>
         }
     }
+    mantraPicker = () => {
+    let date = new Date().toDateString().split(' ')
+    if (date && date[0] === 'Sun') {
+        this.setState({
+            mantra: 'Trust your intuition, '
+        })
+      } else if (date && date[0] === 'Mon') {
+        this.setState({
+            mantra: 'Find your calm, '
+        })
+      } else if (date && date[0] === 'Tue') {
+        this.setState({
+            mantra: 'Help others, '
+        })
+      } else if (date && date[0] === 'Wed') {
+            this.setState({
+                mantra: 'Be in the moment, '
+            })
+      } else if (date && date[0] === 'Thu') {
+        this.setState({
+            mantra: 'Be happy, '
+        })
+      } else if (date && date[0] === 'Fri') {
+            this.setState({
+                mantra: 'Good things take time, '
+            })
+      } else if (date && date[0] === 'Sat') {
+        this.setState({
+            mantra: 'Live your truth, '
+        })
+      }
+    }
 
     render() {
         const { user } = this.props
+        let {mantra} = this.state
         return (
             <div id='date-div'>
                 <div id='live-clock' onDoubleClick={this.handleDoubleClick}>
@@ -61,7 +96,7 @@ export class DateTime extends Component {
 
                 </div>
                 <div id='hour-greeting' onDoubleClick={this.handleGreetingClick}>
-                    {!this.state.greetingFlip ? (<h2>{this.MornAfterEve()}</h2>) : (<h2><div id='hour-greeting'>Trust your intuition, {user.firstName}. </div></h2>)}
+                    {!this.state.greetingFlip ? (<h2>{this.MornAfterEve()}</h2>) : (<h2><div id='hour-greeting'>{mantra}{user.firstName}. </div></h2>)}
 
                 </div>
             </div>

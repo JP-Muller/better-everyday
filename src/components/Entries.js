@@ -6,6 +6,7 @@ import { getPosts, editPost, editPostImage, editPostEntry, deletePost, setPostPu
 import firebase from 'firebase'
 import FileUploader from 'react-firebase-file-uploader'
 import { toast } from 'react-toastify';
+import { css } from 'glamor'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Tenor from 'react-tenor'
@@ -33,111 +34,120 @@ class Entries extends Component {
             userId: this.props.user.user.id,
             gifSearchToggled: false,
             urlBarToggled: false,
+            postCycle: false
         }
         this.deleteEntry = this.deleteEntry.bind(this)
     }
-
     componentDidMount() {
-        let { user, currentLevel, currentXp} = this.props.user
+        let { user, currentLevel, currentXp } = this.props.user
         let { posts } = this.props.entry
-        this.setState({
-            i: posts.length - 1
-        })
+        if (posts && posts.length && posts.length > 1) {
+            this.setState({
+                i: posts.length - 1
+            })
+        }
         if (!user.loggedIn) {
             this.props.getUser();
             console.log('Got User!')
         }
         this.props.getUserScores()
-        if (+currentXp >= 105 && +currentLevel === 0) {
+        if (+currentXp >= 100 && +currentLevel === 0) {
             this.props.levelUp()
-            toast(`DING! You're now level 1!`)
+            this.notifyLevelUp()
         } else if (+currentXp >= 200 && +currentLevel === 1) {
             this.props.levelUp()
-            toast(`DING! You're now level 2!`)
+            this.notifyLevelUp()
         } else if (currentXp >= 300 && +currentLevel === 2) {
             this.props.levelUp()
-            toast(`DING! You're now level 3!`)
+            this.notifyLevelUp()
         } else if (+currentXp >= 400 && +currentLevel === 3) {
             this.props.levelUp()
-            toast(`DING! You're now level 4!`)
+            this.notifyLevelUp()
         } else if (+currentXp >= 500 && +currentLevel === 4) {
             this.props.levelUp()
-            toast(`DING! You're now level 5!`)
+            this.notifyLevelUp()
         } else if (+currentXp >= 600 && +currentLevel === 5) {
             this.props.levelUp()
-            toast(`DING! You're now level 6!`)
+            this.notifyLevelUp()
         } else if (+currentXp >= 700 && +currentLevel === 6) {
             this.props.levelUp()
-            toast(`DING! You're now level 7!`)
+            this.notifyLevelUp()
         } else if (+currentXp >= 800 && +currentLevel === 7) {
             this.props.levelUp()
-            toast(`DING! You're now level 8!`)
+            this.notifyLevelUp()
         } else if (+currentXp >= 900 && +currentLevel === 8) {
             this.props.levelUp()
-            toast(`DING! You're now level 9!`)
+            this.notifyLevelUp()
         } else if (+currentXp >= 1000 && +currentLevel === 9) {
             this.props.levelUp()
-            toast(`DING! You're now level 10!`)
+            this.notifyLevelUp()
+
         } else if (+currentXp >= 1100 && +currentLevel === 10) {
             this.props.levelUp()
-            toast(`DING! You're now level 11!`)
+            this.notifyLevelUp()
+
         } else if (+currentXp >= 1200 && +currentLevel === 11) {
             this.props.levelUp()
-            toast(`DING! You're now level 12`)
+            this.notifyLevelUp()
         } else if (+currentXp >= 1300 && +currentLevel === 12) {
             this.props.levelUp()
-            toast(`DING! You're now level 13!`)
-        } else { (console.log('Player Maxed')) }
+            this.notifyLevelUp()
+        } else { (console.log('Not enough XP for LVLUP!')) }
         if (!posts.length && user.loggedIn) {
             this.props.getPosts()
         }
     }
+    checkKey = e => {
+        let { posts } = this.props.entry
+        if (posts && posts.length > 0) {
+            if (e.keyCode === 39 && this.state.i < posts.length - 1) {
+                let i = this.state.i + 1
+                let listId = posts[i].id
+                console.log(`List ID ${listId} `)
 
-    // componentDidUpdate(prevProps) {
-    //     let {i} = this.state
-    //     let { entry, image, task_1, task_2, task_3, task_4, task_5 } = prevProps
-    //     if (entry !== this.props.entry.posts[i].entry || image !== this.props.entry.posts[i].image || task_1 !== this.props.entry.posts[i].task_1 || task_2 !== this.props.entry.posts[i].task_2 || task_3 !== this.props.entry.posts[i].task_3 || task_4 !== this.props.entry.posts[i].task_4 || task_5 !== this.props.entry.posts[i].task_5 ) {
-    //         this.setState({
-    //             newEntry: entry,
-    //             newImage: image,
-    //             newTask1: task_1,
-    //             newTask2: task_2,
-    //             newTask3: task_3,
-    //             newTask4: task_4,
-    //             newTask5: task_5,
-    //         });
-    //     }
-    // }
+                this.setState({
+                    i,
+                    listId
+                })
+            }
+        } else if (e.keyCode == '39') {
+            if (e.keyCode === 39 && this.state.i < posts.length - 1) {
+                let i = this.state.i + 1
+                let listId = posts[i].id
+                console.log(`List ID ${listId} `)
 
-    //newEntry, newImage, newTask1, newTask2, newTask3, newTask4, newTask5
+                this.setState({
+                    i,
+                    listId
+                })
+            }
 
+        }
+    }
     handleKeyNext = e => {
         let { posts } = this.props.entry
+        this.animatePostCycle()
         console.log('right arrow')
-        // if (e.keyCode === 39) {
-        //     this.handleNext()
-        // }
         if (e.keyCode === 39 && this.state.i < posts.length - 1) {
             let i = this.state.i + 1
             let listId = posts[i].id
-            console.log(`List ID ${listId} `)
+            console.log(`POST ID ${listId} `)
 
             this.setState({
                 i,
                 listId
             })
-            console.log(this.state.i)
         }
     }
 
     handleKeyPrev = e => {
         let { posts } = this.props.entry
+        this.animatePostCycle()
         console.log('left arrow')
         if (e.keyCode === 37 && this.state.i > 0) {
             let i = this.state.i - 1
             let listId = posts[i].id
-            console.log(`List ID ${listId} `)
-            console.log(this.state.i)
+            console.log(`POST ID ${listId} `)
 
             this.setState({
                 i,
@@ -148,6 +158,7 @@ class Entries extends Component {
 
     handleNext = () => {
         let { posts } = this.props.entry
+        this.animatePostCycle()
         if (this.state.i < posts.length - 1) {
             let i = this.state.i + 1
             let listId = posts[i].id
@@ -157,25 +168,31 @@ class Entries extends Component {
                 i,
                 listId
             })
-            // this.setState({ listId })
-            console.log(this.state.i)
-            // console.log(this.state.list.length)
+
         }
     }
     handlePrevious = () => {
         let { posts } = this.props.entry
+        this.animatePostCycle()
         if (this.state.i > 0) {
             let i = this.state.i - 1
             let listId = posts[i].id
             console.log(`List ID ${listId} `)
-            console.log(this.state.i)
-
             this.setState({
                 i,
                 listId
             })
-            // this.setState({ listId })
         }
+
+    }
+    animatePostCycle = () => {
+        let { postCycle } = this.state
+        this.setState({ postCycle: !postCycle }, () => {
+            setTimeout(
+                function () {
+                    this.setState({ postCycle: false })
+                }.bind(this), 200)
+        })
 
     }
     handleEditing = () => {
@@ -275,17 +292,44 @@ class Entries extends Component {
         this.props.editPost(postId, newEntry, newImage, newTask1, newTask2, newTask3, newTask4, newTask5)
         this.setState({ editing: !this.state.editing })
     }
+    notifyLevelUp = () => toast('DING! You leveled up!', {
+        className: css({
+            background: "rgba(0,0,0,0.6) !important",
+            color: '#fff !important'
+
+        }),
+        position: toast.POSITION.BOTTOM_RIGHT,
+        toastClassName: "dark-toast"
+    })
+    notifyPublic = () => toast("Post is now public.", {
+        className: css({
+            background: "rgba(0,0,0,0.6) !important",
+            color: '#fff !important'
+        }),
+        position: toast.POSITION.BOTTOM_RIGHT,
+        toastClassName: "dark-toast"
+    })
+    notifyPrivate = () => toast("Post is now private.", {
+        className: css({
+            background: "rgba(0,0,0,0.6) !important",
+            color: '#fff !important'
+        }),
+        position: toast.POSITION.BOTTOM_RIGHT,
+        toastClassName: "dark-toast"
+    })
     makePostPublic = () => {
         let { i } = this.state
         let { posts } = this.props.entry
         let postId = posts[i].id
         this.props.setPostPublic(postId)
+        this.notifyPublic()
     }
     makePostPrivate = () => {
         let { i } = this.state
         let { posts } = this.props.entry
         let postId = posts[i].id
         this.props.setPostPrivate(postId)
+        this.notifyPrivate()
     }
 
     saveEntryChanges = () => {
@@ -325,15 +369,16 @@ class Entries extends Component {
     readEntry(i) {
         let { list, editing, editingEntry, editingImage, newImage, gifSearchToggled, urlBarToggled } = this.state
         let { posts } = this.props.entry
-        if (posts[i].image && newImage === '') { newImage = posts[i].image }
+        let faderClass = this.state.postCycle ? 'hideMe' : ''
+        if (posts && posts.length > 0 && posts[i].image && newImage === '') { newImage = posts[i].image }
         let completedTasks = []
-        if (posts[i].task_1) { (completedTasks.push(posts[i].task_1, posts[i].task_2, posts[i].task_3, posts[i].task_4, posts[i].task_5)) }
+        if (posts && posts.length > 0 && posts[i].task_1) { (completedTasks.push(posts[i].task_1, posts[i].task_2, posts[i].task_3, posts[i].task_4, posts[i].task_5)) }
         return (
             <section className='entries-display-container'>
                 {/* <DateTime user={this.props.user.user} /> */}
                 <section className='entry-container-preview'>
                     {editing ? (
-                        <div id='entry-preview'>
+                        <div id='entry-preview' className={faderClass}>
 
                             <div id='entry-date'>
                                 {posts[i].date_posted}
@@ -346,13 +391,13 @@ class Entries extends Component {
                                             <div className='entry-upload-img-preview'>
                                                 <div className='entry-image-method-container'>
 
-                                                    <div className='gif-icon'>
+                                                    <div className='entry-edit-gif-icon'>
                                                         <button onClick={this.handleGifSearchToggle}>GIF</button>
                                                     </div>
-                                                    <div className='url-icon'>
+                                                    <div className='entry-edit-url-icon'>
                                                         <i className="fas fa-link" onClick={this.handleUrlBarToggle} />
                                                     </div>
-                                                    <div className='url-icon'>
+                                                    <div className='entry-edit-url-icon'>
                                                         <label style={{ display: 'none' }} ref={fileInput => this.fileInput = fileInput}><FileUploader
                                                             hidden='true'
                                                             accept='image/*'
@@ -394,21 +439,22 @@ class Entries extends Component {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="edit-middle-buttons">
+                                    {/* <div className='edit-all-icons'><i className="far fa-save" onClick={this.saveChanges} /></div> */}
+                                    <button className="buttons" style={{ margin: '0px !important' }} onClick={() => this.handleCancelEdit()} >Go Back</button>
+                                    <button className="buttons" style={{ margin: '0px !important' }} onClick={this.saveChanges}>Save</button>
+                                    {/* <div className='edit-all-icons'><i class="fas fa-times" onClick={() => this.handleCancelEdit()} /></div> */}
+                                </div>
                             </div>
-                            {/* <div className="entry-button-row"  > */}
-                            <div className="edit-middle-buttons">
-                                <button className="buttons" onClick={() => this.handleCancelEdit()} >Go Back</button>
-                                <button className="buttons" onClick={this.saveChanges}>Save</button>
-                            </div>
-                            {/* </div> */}
+
 
 
                         </div>
                     ) : (
-                            <div id='entry-preview'>
+                            <div id='entry-preview' onKeyDown={(e) => this.checkKey(e)} className={faderClass}>
                                 <div id='entry-date'>
                                     {posts[i].date_posted}
-                                    {!posts[i].public ? (<div><i className="fas fa-globe" title='Post is private!' style={{ fontSize: '20px', cursor: 'pointer' }} onClick={this.makePostPublic} /></div>) : <div><i className="fas fa-globe selected" title='Post is public!' style={{ fontSize: '20px', cursor: 'pointer' }} onClick={this.makePostPrivate} /></div>}
+                                    {!posts[i].public ? (<div className='globe-container'><i className="fas fa-globe" title='Post is private!' style={{ fontSize: '20px', cursor: 'pointer' }} onClick={this.makePostPublic} /></div>) : <div className='globe-container'><i className="fas fa-globe selected" title='Post is public!' style={{ fontSize: '20px', cursor: 'pointer' }} onClick={this.makePostPrivate} /></div>}
 
                                     <div> {+i + 1}/{posts.length}</div>
                                 </div>
@@ -516,19 +562,17 @@ class Entries extends Component {
     render() {
         let { user, error, redirect } = this.props.user;
         let { posts } = this.props.entry
+        let { i } = this.state
         if (error || redirect) return <Redirect to="/login" />;
         if (!user.loggedIn) return <div>Loading</div>;
         if (posts.length === 0) {
             this.props.getPosts(user.id)
         }
-        let { i } = this.state
-        // console.log(user)
-        // console.log({ i })
 
         return (
 
             <section id='entryDiv'>
-                {posts.length > 0 ? this.readEntry(i) : null}
+                {posts.length > 0 ? this.readEntry(i) : <div className='noPosts'>No posts to show!</div>}
             </section>
 
         )

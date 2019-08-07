@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { signup } from '../redux/userReducer';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { css } from 'glamor';
 
 class Signup extends Component {
   constructor() {
@@ -22,8 +24,17 @@ class Signup extends Component {
     // console.log(this.state)
   };
 
+  notifySignupSuccess = () => toast('Successfully created account!', {
+    className: css({
+        background: "rgba(0,0,0,0.6) !important"
+    }),
+    position: toast.POSITION.BOTTOM_RIGHT,
+    toastClassName: "dark-toast"
+})
+
   signupUser = () => {
     this.props.signup(this.state.firstName, this.state.lastName, this.state.email, this.state.username, this.state.password);
+    this.notifySignupSuccess()
   };
 
   render() {
@@ -89,7 +100,7 @@ class Signup extends Component {
           </div>
           <br />
           <button onClick={this.signupUser} className="normal-btn">
-            Create Account
+           <Link to='/login'> Create Account </Link>
           </button>
         </div>
 

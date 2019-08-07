@@ -16,7 +16,7 @@ class Inspire extends Component {
             .get('https://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json')
             .then(res => {
                 this.setState({ quotes: res.data })
-                // console.log(res.data)
+                console.log(res.data)
 
             })
             .catch(err => {

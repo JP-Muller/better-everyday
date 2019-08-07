@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { saveTasks, getPosts, saveEntry, savePostDate, saveImageOfDay, saveTodaysMood, removeMood, getAllPublicPosts } from '../../redux/entryReducer'
+import { saveTasks, getPosts, saveEntry, savePostDate, saveImageOfDay, saveTodaysMood, removeMood, getAllPublicPosts, saveInitialTasks } from '../../redux/entryReducer'
 import { addToStreak, removeStreak, getUserScores, getUser, removeStreakBlocker, postedTodayOff } from '../../redux/userReducer'
 import { connect } from 'react-redux'
 import firebase from 'firebase'
@@ -104,14 +104,14 @@ export class Step1 extends Component {
                 //         this.props.removeStreak()
                 //         console.log("REMOVED STREAK");
                 //     }
-                    // let todaysDateSplit = todaysPost.date_posted.split(' ')
-                    // if (posts[posts.length - 2]) {
-                    //     let postBeforeToday = posts[posts.length - 2]
-                    //     let lastPostDate = postBeforeToday.date_posted.split(' ')
-                    //     if (postedToday === true && user.streak_block === false && todaysDateSplit[1] === lastPostDate[1] && +todaysDateSplit[2] !== +lastPostDate[2] && +todaysDateSplit[2] !== +lastPostDate[2] + 1) {
-                    //         this.props.removeStreak()
-                    //     }
-                    // }
+                // let todaysDateSplit = todaysPost.date_posted.split(' ')
+                // if (posts[posts.length - 2]) {
+                //     let postBeforeToday = posts[posts.length - 2]
+                //     let lastPostDate = postBeforeToday.date_posted.split(' ')
+                //     if (postedToday === true && user.streak_block === false && todaysDateSplit[1] === lastPostDate[1] && +todaysDateSplit[2] !== +lastPostDate[2] && +todaysDateSplit[2] !== +lastPostDate[2] + 1) {
+                //         this.props.removeStreak()
+                //     }
+                // }
 
                 // })
             }
@@ -152,11 +152,11 @@ export class Step1 extends Component {
         if (input.length !== 0 && taskArray.length < 5) {
             taskArray.push(newTask)
         }
+        this.props.saveInitialTasks(taskArray)
         this.setState({
             initTasks: taskArray,
             inputStr: ''
         })
-
     }
 
     onEnter = e => {
@@ -171,6 +171,7 @@ export class Step1 extends Component {
             if (inputStr.length !== 0 && taskArray.length < 5) {
                 taskArray.push(newTask)
             }
+            this.props.saveInitialTasks(taskArray)
             console.log('Curret Task Items:', taskArray)
             this.setState({
                 initTasks: taskArray,
@@ -210,11 +211,15 @@ export class Step1 extends Component {
 
         for (let i = 0; i < updatedInitTasks.length; i++) {
             if (updatedInitTasks[i] === targetTask) {
+                if (updatedInitTasks[i].checked === true) {
+                    count--
+                }
                 updatedInitTasks.splice(i, 1)
-                count--
+
                 this.setState({ completedCount: count })
             }
         }
+        this.props.saveInitialTasks(updatedInitTasks)
         this.setState({
             initTasks: updatedInitTasks,
         })
@@ -266,6 +271,7 @@ export class Step1 extends Component {
     saveItems = () => {
         let { initTasks } = this.state
         this.props.saveTasks(initTasks)
+        this.props.saveInitialTasks(initTasks)
         this.setState({ mode: 'entryQuestion' })
     }
 
@@ -382,7 +388,7 @@ export class Step1 extends Component {
         // this.props.getUserScores()
         console.log(user)
         console.log(posts)
-    
+
         if (posted_today && posts.length && posts[posts.length - 1].date_posted !== date) {
             if (mode === 'taskList') {
                 return (<div className='list-style'>
@@ -421,7 +427,7 @@ export class Step1 extends Component {
                 return (
                     <div className='entryStep-style'>
                         <header className='list-header'>
-                            <h1>Way to go, {this.props.user.user.firstName}! You completed {completedCount === 1 ? (`${completedCount} task!`) : (`${completedCount} tasks!`)}</h1>
+                            {completedCount === 0 ? (<h1>No tasks were completed..</h1>) : <h1>Way to go, {this.props.user.user.firstName}! You completed {completedCount === 1 ? (`${completedCount} task!`) : (`${completedCount} tasks!`)}</h1>}
                         </header>
 
                         <section className='prompt-user'><h2>Add some additional thoughts about today!</h2></section>
@@ -687,7 +693,7 @@ export class Step1 extends Component {
                 return (
                     <div className='entryStep-style'>
                         <header className='list-header'>
-                            <h1>Way to go, {this.props.user.user.firstName}! You completed {completedCount === 1 ? (`${completedCount} task!`) : (`${completedCount} tasks!`)}</h1>
+                            {completedCount === 0 ? (<h1>No tasks were completed..</h1>) : <h1>Way to go, {this.props.user.user.firstName}! You completed {completedCount === 1 ? (`${completedCount} task!`) : (`${completedCount} tasks!`)}</h1>}
                         </header>
 
                         <section className='prompt-user'><h2>Add some additional thoughts about today!</h2></section>
@@ -717,30 +723,31 @@ export class Step1 extends Component {
                             </header>
                             <div className='wrapper' id='list-header'>
                                 <div className='upload-img-preview'>
-                                    <div className='image-method-container'>
-                                        <div className='gif-icon'>
-                                            <button onClick={this.handleGifSearchToggle} title='Search GIFs'>GIF</button>
-                                        </div>
-                                        <div className='url-icon'>
-                                            <i className="fas fa-link" onClick={this.handleUrlBarToggle} title='Image URL' />
-                                        </div>
-                                        <div className='url-icon'>
-                                            <label style={{ display: 'none' }} ref={fileInput => this.fileInput = fileInput}><FileUploader
-                                                hidden='true'
-                                                accept='image/*'
-                                                name='fileSelected'
-                                                storageRef={firebase.storage().ref('entryImages')}
-                                                onUploadSuccess={this.fileUploadHandler} />
-                                            </label>
-                                            <i className="fas fa-upload" onClick={() => this.fileInput.click()} title='Upload' />
-                                        </div>
-                                    </div>
-                                    {gifSearchToggled ? (<section className='tenor-search'>
-                                        <Tenor token="BH9EX9JC7WAE" onSelect={result => this.setState({ imageOfDay: result.media[0].gif.url })} />
-                                    </section>) : null}
-                                    {urlBarToggled ? (<section className='url-search'>
-                                        <input type='text' placeholder='Image URL' onChange={(e) => this.handleImageUrl(e.target.value)} /></section>) : null}
+
                                     <section className='image-of-day-container'>
+                                        <div className='image-method-container'>
+                                            <div className='gif-icon'>
+                                                <button onClick={this.handleGifSearchToggle} title='Search GIFs'>GIF</button>
+                                            </div>
+                                            <div className='url-icon'>
+                                                <i className="fas fa-link" onClick={this.handleUrlBarToggle} title='Image URL' />
+                                            </div>
+                                            <div className='url-icon'>
+                                                <label style={{ display: 'none' }} ref={fileInput => this.fileInput = fileInput}><FileUploader
+                                                    hidden='true'
+                                                    accept='image/*'
+                                                    name='fileSelected'
+                                                    storageRef={firebase.storage().ref('entryImages')}
+                                                    onUploadSuccess={this.fileUploadHandler} />
+                                                </label>
+                                                <i className="fas fa-upload" onClick={() => this.fileInput.click()} title='Upload' />
+                                            </div>
+                                        </div>
+                                        {gifSearchToggled ? (<section className='tenor-search'>
+                                            <Tenor token="BH9EX9JC7WAE" onSelect={result => this.setState({ imageOfDay: result.media[0].gif.url })} />
+                                        </section>) : null}
+                                        {urlBarToggled ? (<section className='url-search'>
+                                            <input type='text' placeholder='Image URL' onChange={(e) => this.handleImageUrl(e.target.value)} /></section>) : null}
                                         <img src={imageOfDay} alt='Preview Imagery' />
                                         {!urlBarToggled && !gifSearchToggled ? (<p> Pick a mood</p>) : null}
                                         <div className='mood-picker-container'>
@@ -773,7 +780,7 @@ export class Step1 extends Component {
                         </div >
                     </div >
                 )
-            }else if (!posts.length){
+            } else if (!posts.length) {
                 return (<div className='list-style'>
                     <header className='list-header'>
                         <h1> What's on the agenda for today?</h1>
@@ -818,5 +825,5 @@ function mapStateToProps(state) {
 }
 export default connect(
     mapStateToProps,
-    { saveTasks, getPosts, saveEntry, savePostDate, saveImageOfDay, saveTodaysMood, removeMood, addToStreak, removeStreak, getUser, getUserScores, removeStreakBlocker, getAllPublicPosts, postedTodayOff }
+    { saveTasks, getPosts, saveEntry, savePostDate, saveImageOfDay, saveTodaysMood, removeMood, addToStreak, removeStreak, getUser, getUserScores, removeStreakBlocker, getAllPublicPosts, postedTodayOff, saveInitialTasks }
 )(Step1);

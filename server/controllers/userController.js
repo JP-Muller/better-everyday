@@ -36,22 +36,22 @@ module.exports = {
     let salt = await bcrypt.genSalt(saltRounds);
     let hash = await bcrypt.hash(password, salt);
     let [user] = await db.create_user([firstName, lastName, email, username, hash]);
-    req.session.user = {
-      username: user.username,
-      id: user.id,
-      firstName: user.first_name,
-      lastName: user.last_name,
-      email: user.email,
-      loggedIn: true,
-      xp: user.xp,
-      level: user.level,
-      score_streak: user.score_streak,
-      image: user.image,
-      streak_block: user.streak_block,
-      posted_today: user.posted_today,
-      last_date_posted: user.last_date_posted,
-      highest_streak: user.highest_streak
-    };
+    // req.session.user = {
+    //   username: user.username,
+    //   id: user.id,
+    //   firstName: user.first_name,
+    //   lastName: user.last_name,
+    //   email: user.email,
+    //   loggedIn: true,
+    //   xp: user.xp,
+    //   level: user.level,
+    //   score_streak: user.score_streak,
+    //   image: user.image,
+    //   streak_block: user.streak_block,
+    //   posted_today: user.posted_today,
+    //   last_date_posted: user.last_date_posted,
+    //   highest_streak: user.highest_streak
+    // };
     console.log('req.session.user', req.session.user)
     res.send(req.session.user);
   },

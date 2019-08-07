@@ -141,6 +141,7 @@ module.exports = {
         let { task1, task2, task3, task4, task5, entry, date, imageOfDay, mood } = req.body
         const db = req.app.get('db')
         let posts = await db.add_post([task1, task2, task3, task4, task5, entry, date, imageOfDay, mood, req.session.user.id])
+        .catch(console.log('ERROR NAAH'))
         console.log('hit Save Post!!!...')
         res.send(posts)
     },

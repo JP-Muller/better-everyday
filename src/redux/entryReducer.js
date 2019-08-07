@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ADD_TASKS, ADD_ENTRY, ADD_IMAGE, ADD_DATE, ADD_MOOD, REMOVE_MOOD, GET_POSTS, SAVE_POST, EDIT_POST, DELETE_POST, EDIT_IMAGE, EDIT_ENTRY, POST_VIEW_TOGGLE, CHANGE_POST_PRIVATE, CHANGE_POST_PUBLIC, GET_PUBLIC_POSTS, CLEAR_STATE } from './actionTypes'
+import { ADD_TASKS, SAVE_INITIAL_TASKS, ADD_ENTRY, ADD_IMAGE, ADD_DATE, ADD_MOOD, REMOVE_MOOD, GET_POSTS, SAVE_POST, EDIT_POST, DELETE_POST, EDIT_IMAGE, EDIT_ENTRY, POST_VIEW_TOGGLE, CHANGE_POST_PRIVATE, CHANGE_POST_PUBLIC, GET_PUBLIC_POSTS, CLEAR_STATE } from './actionTypes'
 
 const initialState = {
     initialTasks: [],
@@ -115,9 +115,15 @@ export function setPostPublic(postId) {
 
 
 
-
-
 // saving state
+export const saveInitialTasks = (taskArray) => {
+    let data = taskArray
+    return {
+        type: SAVE_INITIAL_TASKS,
+        payload: data
+    }
+}
+
 export const saveTasks = (taskArray) => {
     let data = taskArray.filter(obj => obj.checked === true)
     console.log('Saved Checked Tasks to Store:', data)
@@ -178,6 +184,8 @@ export default function (state = initialState, action) {
     switch (type) {
         case ADD_TASKS:
             return { ...state, completedTasks: payload, loading: false }
+        case SAVE_INITIAL_TASKS:
+            return { ...state, initialTasks: payload, loading: false }
         case ADD_ENTRY:
             return { ...state, entry: payload }
         case ADD_IMAGE:
@@ -198,6 +206,7 @@ export default function (state = initialState, action) {
                 ...state,
                 posts: payload,
                 completedTasks: [],
+                initialTasks: [],
                 imageOfDay: 'https://media.tenor.com/images/210681d6ca7aaa4bfde14c3579b8b94d/tenor.gif',
                 entry: '',
                 date: '',

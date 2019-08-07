@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { toast } from 'react-toastify'
+import {css} from 'glamor'
 import { getUser, getUserScores } from '../redux/userReducer';
 import axios from 'axios';
 
@@ -20,6 +21,13 @@ class About extends Component {
         this.props.getUser()
         this.props.getUserScores()
     }
+    notifyEmailSuccess = () => toast('Message sent, thank you!', {
+        className: css({
+            background: "rgba(0,0,0,0.6) !important"
+        }),
+        position: toast.POSITION.BOTTOM_RIGHT,
+        toastClassName: "dark-toast"
+    })
     contactFlip = () => {
         let { contactUs } = this.state
         this.setState({ contactUs: !contactUs })
@@ -31,15 +39,14 @@ class About extends Component {
     async handleSubmit(e) {
         e.preventDefault()
         const { name, email, message } = this.state
-        const form = await axios.post('/api/form', { name, email, message })
+        await axios.post('/api/form', { name, email, message })
             .then(
-                this.contactFlip(),
-                console.log(form),
+                this.contactFlip(),     
         this.setState({
             name: '',
             email: '',
             message: '',
-        }, () => { toast(`Message sent! Thank you!`) }))
+        }, () => { this.notifyEmailSuccess() }))
     }
     render() {
         let { contactUs } = this.state

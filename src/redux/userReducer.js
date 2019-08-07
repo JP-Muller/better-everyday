@@ -176,7 +176,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 redirect: false,
-                user: payload,
+                // user: payload,
                 error: false
             };
         case SIGNUP + '_REJECTED':

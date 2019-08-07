@@ -24,7 +24,6 @@ export class Account extends Component {
             urlBarToggled: false,
         }
     }
-    notify = () => toast("Wow so easy !");
     componentDidMount() {
         this.props.getUser()
         this.props.getUserScores()
@@ -68,19 +67,7 @@ export class Account extends Component {
         let { name, value } = e.target
         this.setState({ [name]: value })
         console.log(`${name}: ${value}`)
-        toast("DING!", {
-            className: css({
-                background: 'black'
-            }),
-            bodyClassName: css({
-                fontSize: '60px'
-            }),
-            progressClassName: css({
-                background: "repeating-radial-gradient(circle at center, red 0, blue, green 30px)"
-            }),
-            position: toast.POSITION.BOTTOM_RIGHT,
-        });
-    };
+    }
     render() {
 
         let { user, error, redirect, scoreStreak, currentLevel, allPosts, highestStreak } = this.props.user
@@ -98,7 +85,7 @@ export class Account extends Component {
                 <div className='account-details-container'>
                     {!adminView ? (<section className='account-container'>
                         <div className='account-image-preview'>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                            <div className='acc-section' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                 {!editPic ? (<i className="fas fa-edit" onClick={this.flipImageEdit} style={{ position: 'top' }} />) : (<div><div className='image-method-container'>
                                     <div className='url-icon'>
                                         <i className="far fa-save" onClick={this.saveImageChanges} />

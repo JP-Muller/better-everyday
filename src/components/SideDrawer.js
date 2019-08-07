@@ -54,7 +54,7 @@ class SideDrawer extends Component {
                 <div className='account-image'>
                     <img src={image} />
                     <h3>{username}</h3>
-                    <h4 style={{marginTop: '15px'}}>Level: {currentLevel}</h4>
+                    <h4 style={{marginTop: '15px'}}>LEVEL: {currentLevel}</h4>
                     {/* <h4>Score Streak: {scoreStreak}</h4> */}
                 </div>
                 <div className='side-drawer-link-container'>
