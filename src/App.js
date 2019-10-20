@@ -7,7 +7,6 @@ import Weather from './components/Weather'
 import SideDrawer from './components/SideDrawer'
 import Backdrop from './components/Backdrop'
 import 'react-toastify/dist/ReactToastify.css'
-import { css } from 'glamor';
 import { ToastContainer, toast } from 'react-toastify';
 import firebase from 'firebase'
 import config from './config/firebaseConfig'
@@ -57,7 +56,7 @@ class App extends Component {
     } else if (date && date[0] === 'Wed') {
       for (let i = 0, max = bodyStyle.length; i < max; i++) {
         if (i = 1) {
-          bodyStyle[0].style.background = "url(https://images.unsplash.com/photo-1564198659768-f5b37e6419ee?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80) no-repeat center fixed"
+          bodyStyle[0].style.background = "url(https://images.unsplash.com/photo-1477346611705-65d1883cee1e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80) no-repeat center fixed"
         }
         if (i = 2) {
           bodyStyle[0].style.backgroundSize = 'cover'

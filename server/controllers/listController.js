@@ -87,7 +87,7 @@ module.exports = {
         index !== -1 && list.splice(index, 1);
         res.status(200).send(list)
     },
-    //// DB DB DB DB DB 
+    // DB 
 
     async getPosts(req, res) {
         let { userId } = req.params
@@ -166,4 +166,3 @@ module.exports = {
 
 }
 
-//need to add task items to this for complete post

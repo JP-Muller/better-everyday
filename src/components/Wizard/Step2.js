@@ -8,7 +8,6 @@ import { toast } from 'react-toastify'
 import { css } from 'glamor'
 import ReactQuill from 'react-quill'
 import axios from 'axios'
-const parse = require('html-react-parser')
 
 
 export class Step2 extends Component {

@@ -10,9 +10,7 @@ import { css } from 'glamor'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Tenor from 'react-tenor'
-import DateTime from './DateTime'
-import axios from 'axios';
-const parse = require('html-react-parser')
+
 
 class Entries extends Component {
     constructor(props) {
@@ -110,7 +108,7 @@ class Entries extends Component {
                     listId
                 })
             }
-        } else if (e.keyCode == '39') {
+        } else if (e.keyCode === '39') {
             if (e.keyCode === 39 && this.state.i < posts.length - 1) {
                 let i = this.state.i + 1
                 let listId = posts[i].id
@@ -240,6 +238,15 @@ class Entries extends Component {
         })
     }
 
+    handleGifSelect = (gifResult) => {
+        let {gifSearchToggled} = this.state
+        this.handleGifSearchToggle(!gifSearchToggled)
+        this.setState({
+            newImage: gifResult
+        })
+
+    }
+
     handleUrlBarToggle = () => {
         let { urlBarToggled, gifSearchToggled } = this.state
         if (gifSearchToggled) {
@@ -251,17 +258,17 @@ class Entries extends Component {
         let { posts } = this.props.entry
         let mood = posts[i].mood
         if (mood === 'Amused') {
-            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-laugh-squint" title='Amused' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-laugh-squint" title='Amused' onClick={this.setMoodAmused} /></div></div>)
         } else if (mood === 'Happy') {
-            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-grin" title='Happy' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-grin" title='Happy' onClick={this.setMoodAmused} /></div></div>)
         } else if (mood === 'Content') {
-            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-meh" title='Content' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-meh" title='Content' onClick={this.setMoodAmused} /></div></div>)
         } else if (mood === 'Upset') {
-            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-frown" title='Upset' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-frown" title='Upset' onClick={this.setMoodAmused} /></div></div>)
         } else if (mood === 'Tired') {
-            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-tired" title='Tired' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-tired" title='Tired' onClick={this.setMoodAmused} /></div></div>)
         } else if (mood === 'Angry') {
-            return (<div className='entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-angry" title='Angry' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='mood-icon'><i className="far fa-angry" title='Angry' onClick={this.setMoodAmused} /></div></div>)
         } else (console.log('No mood to display'))
     }
     saveChanges = () => {
@@ -409,7 +416,7 @@ class Entries extends Component {
                                                     </div>
                                                 </div>
                                                 {gifSearchToggled ? (<section className='tenor-search'>
-                                                    <Tenor token="BH9EX9JC7WAE" onSelect={result => this.setState({ newImage: result.media[0].gif.url })} />
+                                                    <Tenor token="BH9EX9JC7WAE" onSelect={result => this.handleGifSelect(result.media[0].gif.url)} />
                                                 </section>) : null}
                                                 {/* <p>Image URL: </p> */}
                                                 {urlBarToggled ? (<section className='url-search'>
@@ -487,11 +494,11 @@ class Entries extends Component {
                                                             </div>
                                                             <div className='url-icon'>
 
-                                                                <i class="fas fa-times" onClick={this.flipImageEdit} />
+                                                                <i className="fas fa-times" onClick={this.flipImageEdit} />
                                                             </div>
                                                         </div>
                                                         {gifSearchToggled ? (<section className='tenor-search'>
-                                                            <Tenor token="BH9EX9JC7WAE" onSelect={result => this.setState({ newImage: result.media[0].gif.url })} />
+                                                            <Tenor token="BH9EX9JC7WAE" onSelect={result => this.handleGifSelect(result.media[0].gif.url)} />
                                                         </section>) : null}
                                                         {/* <p>Image URL: </p> */}
                                                         {urlBarToggled ? (<section className='url-search'>
@@ -525,7 +532,7 @@ class Entries extends Component {
                                     {/* <textarea wrap='soft' id='update-thought' defaultValue={list[i].thought} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this.handleEditingDone} /> */}
 
                                     <div id='entry-of-day-preview'>
-                                        <header className='post-titles-header'><h3 id='entry-of-day-header-preview'><u>Additional Thoughts</u> {!editingEntry ? (<i className="fas fa-edit" onClick={this.flipEntryEdit} />) : (<div className='save-delete-container'><i className="far fa-save" onClick={this.saveEntryChanges} /><i class="fas fa-times" onClick={this.flipEntryEdit} /></div>)} </h3></header>
+                                        <header className='post-titles-header'><h3 id='entry-of-day-header-preview'><u>Additional Thoughts</u> {!editingEntry ? (<i className="fas fa-edit" onClick={this.flipEntryEdit} />) : (<div className='save-delete-container'><i className="far fa-save" onClick={this.saveEntryChanges} /><i className="fas fa-times" onClick={this.flipEntryEdit} /></div>)} </h3></header>
                                         <div id='entry-of-day-text-preview' >
 
                                             {editingEntry ? (<div className='edit-entry-quill-container'>

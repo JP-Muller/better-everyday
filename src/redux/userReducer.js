@@ -156,7 +156,6 @@ export const postedTodayOff = () => {
 }
 export default function (state = initialState, action) {
     let { type, payload } = action;
-    let date = new Date().toDateString()
     switch (type) {
         case LOGIN + '_FULFILLED':
             return {

@@ -3,10 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getUser, getUserScores } from '../redux/userReducer';
 import { getPosts } from '../redux/entryReducer'
-import List from './List'
 import DateTime from './DateTime'
-import Weather from './Weather'
-import Background from './Background'
 import Wizard from './Wizard/Wizard'
 
 class Dashboard extends Component {

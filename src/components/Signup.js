@@ -21,7 +21,6 @@ class Signup extends Component {
     let { name, value } = e.target;
     this.setState({ [name]: value });
     console.log(`${name}: ${value}`)
-    // console.log(this.state)
   };
 
   notifySignupSuccess = () => toast('Successfully created account!', {

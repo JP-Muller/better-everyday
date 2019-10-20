@@ -108,15 +108,6 @@ app.post('/api/streakblockeroff', uc.streakBlockerOff)
 app.put('/api/userimage', uc.updateProfileImage)
 
 
-// Quotes
-// app.get('/api/quotes', qc.grabQuotes)
-
-//Background Image
-
-//IP Location finder
-// app.get('/api/location', lc.grabLocation)
-//Weather
-
 app.use(express.static(__dirname + '/../build'))
 
 app.get('*', (req, res) => {

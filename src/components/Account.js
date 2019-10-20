@@ -3,9 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Login from './Login'
 import { getUser, getUserScores, adminGetAllPosts, updateProfileImage } from '../redux/userReducer';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
-import { css } from 'glamor';
 import firebase from 'firebase'
 import FileUploader from 'react-firebase-file-uploader'
 const parse = require('html-react-parser')
@@ -70,7 +68,7 @@ export class Account extends Component {
     }
     render() {
 
-        let { user, error, redirect, scoreStreak, currentLevel, allPosts, highestStreak } = this.props.user
+        let { user, error, redirect, currentLevel, allPosts } = this.props.user
         let { totalPosts } = this.props.entry
         let { adminView, editPic, urlBarToggled, newProfileImage } = this.state
         let { firstName, lastName, username, email, xp } = user

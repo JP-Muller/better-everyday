@@ -20,6 +20,8 @@
 .env
 config
 functions
+.env
+
 
 npm-debug.log*
 yarn-debug.log*

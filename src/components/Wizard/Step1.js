@@ -67,8 +67,7 @@ export class Step1 extends Component {
     // }
 
     checkIfPosted = () => {
-        let { postedToday, todaysPost } = this.state
-        let { user, posted } = this.props.user
+        let { user } = this.props.user
         let { last_date_posted } = user
         let { posts } = this.props.entry
         let date = new Date().toDateString()
@@ -233,6 +232,15 @@ export class Step1 extends Component {
         })
     }
 
+    handleGifSelect = (gifResult) => {
+        let {gifSearchToggled} = this.state
+        this.handleGifSearchToggle(!gifSearchToggled)
+        this.setState({
+            imageOfDay: gifResult
+        })
+
+    }
+
     handleUrlBarToggle = () => {
         let { urlBarToggled, gifSearchToggled } = this.state
         if (gifSearchToggled) {
@@ -276,7 +284,7 @@ export class Step1 extends Component {
     }
 
     saveEntry = () => {
-        let { entry, date } = this.state
+        let { entry } = this.state
         this.props.saveEntry(entry)
         this.setState({ mode: 'imageQuestion' })
     }
@@ -350,17 +358,17 @@ export class Step1 extends Component {
     }
     moodChecker = (mood) => {
         if (mood === 'Amused') {
-            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-laugh-squint" title='Amused' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-laugh-squint" title='Amused' onClick={this.setMoodAmused} /></div></div>)
         } else if (mood === 'Happy') {
-            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-grin" title='Happy' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-grin" title='Happy' onClick={this.setMoodAmused} /></div></div>)
         } else if (mood === 'Content') {
-            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-meh" title='Content' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-meh" title='Content' onClick={this.setMoodAmused} /></div></div>)
         } else if (mood === 'Upset') {
-            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-frown" title='Upset' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-frown" title='Upset' onClick={this.setMoodAmused} /></div></div>)
         } else if (mood === 'Tired') {
-            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-tired" title='Tired' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-tired" title='Tired' onClick={this.setMoodAmused} /></div></div>)
         } else if (mood === 'Angry') {
-            return (<div className='public-entries-mood-container' style={{ display: 'flex', justifyContent: 'spaceBetween', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-angry" title='Angry' onClick={this.setMoodAmused} /></div></div>)
+            return (<div className='public-entries-mood-container' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Today's Mood<div className='public-mood-icon'><i className="far fa-angry" title='Angry' onClick={this.setMoodAmused} /></div></div>)
         } else (console.log('No mood to display'))
     }
     togglePublicPosts = () => {
@@ -476,7 +484,7 @@ export class Step1 extends Component {
                                         </div>
                                     </div>
                                     {gifSearchToggled ? (<section className='tenor-search'>
-                                        <Tenor token="BH9EX9JC7WAE" onSelect={result => this.setState({ imageOfDay: result.media[0].gif.url })} />
+                                        <Tenor token="BH9EX9JC7WAE" onSelect={result => this.handleGifSelect(result.media[0].gif.url)} />
                                     </section>) : null}
                                     {urlBarToggled ? (<section className='url-search'>
                                         <input type='text' placeholder='Image URL' onChange={(e) => this.handleImageUrl(e.target.value)} /></section>) : null}
@@ -744,7 +752,7 @@ export class Step1 extends Component {
                                             </div>
                                         </div>
                                         {gifSearchToggled ? (<section className='tenor-search'>
-                                            <Tenor token="BH9EX9JC7WAE" onSelect={result => this.setState({ imageOfDay: result.media[0].gif.url })} />
+                                            <Tenor token="BH9EX9JC7WAE" onSelect={result => this.handleGifSelect(result.media[0].gif.url)} />
                                         </section>) : null}
                                         {urlBarToggled ? (<section className='url-search'>
                                             <input type='text' placeholder='Image URL' onChange={(e) => this.handleImageUrl(e.target.value)} /></section>) : null}
